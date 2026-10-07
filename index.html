@@ -1,0 +1,853 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>파주 AI-ROAD 학부모 연수</title>
+<style>
+  :root{
+    --indigo:#5b4fe9; --indigo-d:#4a3fd0; --indigo-l:#efeefc;
+    --ink:#20233a; --muted:#6b7280; --line:#e9e7f5; --bg:#f5f5fb; --card:#fff;
+    --orange:#f0932b; --green:#2aa876; --blue:#2f80ed; --red:#e0555f;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+    line-height:1.65;font-size:17px;-webkit-text-size-adjust:100%;}
+  .wrap{max-width:720px;margin:0 auto;padding:0 15px 80px;}
+  .screen{display:none;}
+  .screen.active{display:block;animation:fadein .25s ease;}
+  @keyframes fadein{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+  .nav a{cursor:pointer;}
+  .jump{cursor:pointer;}
+
+  header{background:linear-gradient(135deg,#6d5cf0,#5b4fe9);color:#fff;text-align:center;padding:26px 18px 30px;position:relative;}
+  header .kicker{font-size:13px;opacity:.9;margin:0 0 6px;}
+  header h1{font-size:24px;font-weight:900;margin:0 0 6px;letter-spacing:-.5px;line-height:1.3;}
+  header p.sub{font-size:14px;opacity:.92;margin:0;}
+  .teacher-top{position:absolute;top:10px;right:12px;color:rgba(255,255,255,.8);text-decoration:none;
+    font-size:11px;font-weight:700;background:rgba(255,255,255,.15);padding:4px 9px;border-radius:16px;}
+
+  /* 상단 이동 칩 (모바일 가로 스크롤) */
+  .nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:nowrap;padding:9px 12px;}
+  .nav a{display:inline-block;font-size:13.5px;font-weight:700;color:var(--muted);text-decoration:none;
+    padding:7px 13px;border-radius:20px;margin-right:6px;background:#f0eefb;}
+  .nav a.active{background:var(--indigo);color:#fff;}
+
+  /* 학교급 토글 */
+  .levelbar{display:flex;gap:8px;justify-content:center;margin:16px 0 4px;flex-wrap:wrap;}
+  .levelbar button{flex:1;min-width:96px;border:2px solid var(--line);background:#fff;color:var(--muted);
+    font-size:15px;font-weight:800;padding:12px 8px;border-radius:14px;cursor:pointer;}
+  .levelbar button.on{border-color:var(--indigo);background:var(--indigo);color:#fff;box-shadow:0 4px 14px rgba(91,79,233,.25);}
+  .levelnote{text-align:center;font-size:13px;color:var(--muted);margin:4px 0 0;}
+
+  section{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px 18px;margin-top:16px;box-shadow:0 3px 14px rgba(40,30,90,.04);scroll-margin-top:64px;}
+  h2.s{font-size:20px;font-weight:900;margin:0 0 6px;letter-spacing:-.3px;}
+  .lead{color:var(--muted);font-size:15px;margin:0 0 14px;}
+  .sub{font-size:16px;font-weight:800;margin:18px 0 8px;color:var(--indigo-d);}
+  p{margin:10px 0;}
+
+  .btn{display:block;width:100%;text-align:center;text-decoration:none;border:none;border-radius:14px;
+    padding:16px;font-size:16px;font-weight:800;color:#fff;cursor:pointer;margin:10px 0;}
+  .btn:active{transform:translateY(1px);}
+  .btn.indigo{background:var(--indigo)} .btn.green{background:var(--green)} .btn.orange{background:var(--orange)}
+  .btn.blue{background:var(--blue)} .btn.dark{background:#33323f}
+  .btn small{display:block;font-size:12px;font-weight:600;opacity:.85;margin-top:3px;}
+
+  .stat{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0;}
+  .stat div{background:#f7f6fc;border-radius:14px;padding:14px;text-align:center;}
+  .stat .n{font-size:26px;font-weight:900;color:var(--indigo);line-height:1.1;}
+  .stat .t{font-size:12.5px;color:var(--muted);margin-top:4px;}
+  .src{font-size:11.5px;color:#a9a6bb;margin-top:6px;}
+  /* 뒤집는 통계 카드 */
+  .flipgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin:8px 0 12px;}
+  .flip{perspective:1000px;height:132px;cursor:pointer;}
+  .flip-inner{position:relative;width:100%;height:100%;transition:transform .55s;transform-style:preserve-3d;}
+  .flip.flipped .flip-inner{transform:rotateY(180deg);}
+  .flip-front,.flip-back{position:absolute;inset:0;-webkit-backface-visibility:hidden;backface-visibility:hidden;
+    border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;text-align:center;}
+  .flip-front{background:linear-gradient(135deg,#6d5cf0,#5b4fe9);color:#fff;}
+  .flip-front .q{font-size:15px;font-weight:800;line-height:1.4;}
+  .flip-front .h{font-size:12px;opacity:.9;margin-top:10px;}
+  .flip-back{background:#fff;border:2px solid var(--indigo);transform:rotateY(180deg);}
+  .flip-back .n{font-size:32px;font-weight:900;color:var(--indigo);line-height:1;}
+  .flip-back .t{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.35;}
+
+  .steps{counter-reset:s;margin:10px 0;}
+  .steps li{list-style:none;position:relative;padding:10px 0 10px 42px;border-bottom:1px solid var(--line);}
+  .steps li:last-child{border-bottom:none;}
+  .steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:9px;
+    width:28px;height:28px;background:var(--indigo-l);color:var(--indigo);border-radius:50%;
+    font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;}
+  .steps b{font-weight:800;}
+
+  .callcard{background:#fff7f2;border:1px solid #ffe0cc;border-radius:16px;padding:16px;margin:12px 0;}
+  .callcard h4{margin:0 0 10px;font-size:15px;}
+  .callcard a{display:flex;justify-content:space-between;align-items:center;text-decoration:none;color:var(--ink);
+    background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 15px;margin:8px 0;font-weight:700;}
+  .callcard a .num{color:var(--red);font-weight:900;font-size:18px;}
+
+  .tip{background:var(--indigo-l);border-radius:12px;padding:13px 15px;font-size:14.5px;margin:12px 0;}
+  .tip b{color:var(--indigo-d);}
+  .warn{background:#fff1f1;border:1px solid #f6cccc;border-radius:12px;padding:13px 15px;font-size:14.5px;margin:12px 0;}
+
+  /* 학교급별 블록 */
+  .lv{display:none;}
+  .lv.show{display:block;}
+  .lvtag{display:inline-block;font-size:12px;font-weight:800;padding:3px 10px;border-radius:12px;margin-bottom:8px;}
+  .lvtag.cho{background:#fdecd8;color:#b5641a;} .lvtag.jung{background:#dcebff;color:#1f5fc0;} .lvtag.go{background:#d9f2e5;color:#1c8055;}
+
+  /* 포스트잇 */
+  .pi-input{display:flex;gap:8px;margin:6px 0 14px;flex-wrap:wrap;}
+  .pi-input input{flex:1;min-width:150px;border:1px solid var(--line);border-radius:12px;padding:14px;font:inherit;font-size:15px;}
+  .pi-input input:focus{outline:none;border-color:var(--indigo);box-shadow:0 0 0 3px var(--indigo-l);}
+  .pi-input button{border:none;background:var(--indigo);color:#fff;border-radius:12px;padding:0 20px;font-weight:800;font-size:15px;}
+  .notes{display:flex;flex-wrap:wrap;gap:10px;}
+  .note{position:relative;background:#fff3b0;border-radius:8px;padding:12px 12px 14px;font-size:14px;min-width:130px;max-width:100%;
+    box-shadow:0 2px 6px rgba(0,0,0,.07);}
+  .note.ex{opacity:.65;}
+  .note .exb{font-size:10px;font-weight:800;color:rgba(0,0,0,.4);background:rgba(255,255,255,.6);padding:1px 6px;border-radius:6px;margin-right:6px;}
+
+  /* 교사 설정 */
+  .teacher{display:none;background:#fff;border:1px solid var(--line);border-radius:14px;margin:16px 0;padding:14px;}
+  .teacher.on{display:block;}
+  .teacher h4{margin:0 0 8px;color:var(--indigo);font-size:15px;}
+  .teacher .row{display:flex;gap:8px;flex-wrap:wrap;}
+  .teacher input{flex:1;min-width:120px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;letter-spacing:.2em;}
+  .teacher .btn{width:auto;flex:1;padding:11px;}
+  .teacher .tnote{font-size:12.5px;color:var(--muted);margin-top:8px;}
+
+  /* 프롬프트 아코디언 */
+  .acc{border:1px solid var(--line);border-radius:14px;margin:10px 0;overflow:hidden;background:#fff;}
+  .acc>summary{cursor:pointer;list-style:none;padding:15px 16px;font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px;}
+  .acc>summary::-webkit-details-marker{display:none;}
+  .acc>summary::after{content:"▾";margin-left:auto;color:var(--muted);transition:transform .2s;}
+  .acc[open]>summary::after{transform:rotate(180deg);}
+  .acc.star{border:2px solid var(--indigo);background:var(--indigo-l);}
+  .acc.star>summary{color:var(--indigo-d);}
+  .accbody{padding:6px 14px 16px;}
+  .pcard{background:#faf9ff;border:1px solid var(--line);border-radius:12px;padding:13px;margin:10px 0;}
+  .pcard .ptitle{font-weight:800;font-size:14.5px;margin-bottom:4px;}
+  .pcard .pdesc{font-size:13px;color:var(--muted);margin-bottom:8px;}
+  .pcard pre.ptext{white-space:pre-wrap;word-break:break-word;background:#fff;border:1px solid var(--line);
+    border-radius:10px;padding:11px;font-size:13px;line-height:1.5;margin:0 0 10px;max-height:200px;overflow-y:auto;
+    font-family:ui-monospace,Menlo,Consolas,"Malgun Gothic",monospace;}
+  .pcard .copy{display:block;width:100%;border:none;background:var(--green);color:#fff;border-radius:10px;
+    padding:13px;font-size:15px;font-weight:800;cursor:pointer;}
+  .pcard .copy.done{background:#1c8055;}
+  .steplabel{display:inline-block;font-size:12px;font-weight:800;color:#fff;background:var(--indigo);border-radius:8px;padding:2px 8px;margin-right:6px;}
+  .acchint{font-size:13px;color:var(--muted);margin:2px 0 10px;}
+  .gbox{border:1px solid var(--line);background:#f7f6fc;border-radius:16px;padding:16px 14px 18px;}
+  .tqsub{font-size:12px;font-weight:700;opacity:.75;}
+  .acc.tq1{border:2px solid #cdb4fb;} .acc.tq1>summary{background:#efe9fe;color:#6a3fd0;}
+  .acc.tq2{border:2px solid #b7e6c9;} .acc.tq2>summary{background:#e6f8ee;color:#1c8a5a;}
+  .acc.tq3{border:2px solid #ffd39a;} .acc.tq3>summary{background:#fff2df;color:#b5641a;}
+  /* 선물 뒤집기 카드 */
+  .gwrap{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0;}
+  .gflip{perspective:1100px;height:200px;cursor:pointer;}
+  .gflip.wide{grid-column:1/-1;height:250px;}
+  .gflip-in{position:relative;width:100%;height:100%;transition:transform .55s;transform-style:preserve-3d;}
+  .gflip.flipped .gflip-in{transform:rotateY(180deg);}
+  .gfront,.gback{position:absolute;inset:0;-webkit-backface-visibility:hidden;backface-visibility:hidden;border-radius:16px;padding:15px 13px;box-shadow:0 4px 14px rgba(40,30,90,.10);}
+  .gfront{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;}
+  .gfront .gi{font-size:34px;line-height:1;}
+  .gfront .gt{font-size:15.5px;font-weight:900;margin-top:9px;}
+  .gfront .gs{font-size:11.5px;opacity:.92;margin-top:6px;line-height:1.4;}
+  .gfront .gflipnote{font-size:11px;margin-top:11px;opacity:.95;background:rgba(255,255,255,.22);padding:3px 10px;border-radius:12px;}
+  .gback{background:#fff;border:2px solid var(--line);transform:rotateY(180deg);display:flex;flex-direction:column;overflow-y:auto;}
+  .gback .gbt{font-size:14px;font-weight:900;margin-bottom:5px;}
+  .gback .gbd{font-size:12px;color:var(--muted);margin-bottom:9px;line-height:1.45;}
+  .gback .btn{padding:11px;font-size:14px;margin:5px 0;}
+  .gback .dlrow{margin-top:auto;}
+  .gback .dlbtn{padding:10px 6px;font-size:13.5px;}
+  .gback .gline{font-size:12px;line-height:1.75;color:var(--ink);}
+  .gflip .gback{pointer-events:none;} .gflip.flipped .gback{pointer-events:auto;} .gflip.flipped .gfront{pointer-events:none;}
+  .gc1{background:linear-gradient(135deg,#6d5cf0,#5b4fe9);}
+  .gc2{background:linear-gradient(135deg,#2aa876,#1c8a5a);}
+  .gc3{background:linear-gradient(135deg,#f0932b,#e07b1a);}
+  .gc4{background:linear-gradient(135deg,#2f80ed,#1f5fc0);}
+  .gc5{background:linear-gradient(135deg,#e0555f,#c53b46);}
+  .gc6{background:linear-gradient(135deg,#12b3a6,#0e8f85);}
+  .gc7{background:linear-gradient(135deg,#d6457f,#b83368);}
+
+  .appdl{background:#faf9ff;border:1px solid var(--line);border-radius:12px;padding:12px;margin:9px 0;}
+  .appdl .appname{font-weight:800;font-size:15px;margin-bottom:9px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .mainbadge{font-size:11px;font-weight:800;color:#fff;background:var(--indigo);border-radius:10px;padding:2px 9px;}
+  .dlrow{display:flex;gap:8px;}
+  .dlbtn{flex:1;text-align:center;text-decoration:none;font-weight:800;font-size:14.5px;border-radius:11px;padding:13px 8px;
+    background:#fff;border:1.5px solid var(--indigo);color:var(--indigo-d);}
+  .dlbtn:active{transform:translateY(1px);}
+  .jumplabel{font-size:13px;font-weight:800;color:var(--indigo-d);margin:10px 2px 2px;}
+  .jumpgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin:4px 0 2px;}
+  .menugrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:4px 0 8px;}
+  .jump{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:5px;text-decoration:none;
+    background:#fff;border:2px solid var(--line);border-radius:16px;padding:15px 7px;color:var(--ink);text-align:center;box-shadow:0 3px 12px rgba(40,30,90,.05);}
+  .jump:active{transform:translateY(1px);}
+  .jump .ji{font-size:27px;line-height:1;}
+  .jump .jt{font-size:13.5px;font-weight:800;color:var(--indigo-d);}
+  .jump .jd{font-size:10px;color:var(--muted);line-height:1.3;}
+  .installbtn{display:flex;flex-direction:column;gap:3px;text-decoration:none;margin:14px 0 6px;
+    background:linear-gradient(135deg,#6d5cf0,#5b4fe9);color:#fff;border-radius:16px;padding:16px 18px;box-shadow:0 6px 18px rgba(91,79,233,.28);}
+  .installbtn:active{transform:translateY(1px);}
+  .installbtn .ib-t{font-size:17px;font-weight:900;}
+  .installbtn .ib-d{font-size:12.5px;opacity:.92;}
+  .cardgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin:6px 0 18px;}
+  .fcard{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:6px;text-decoration:none;
+    border-radius:18px;padding:18px 8px;text-align:center;color:var(--ink);box-shadow:0 4px 14px rgba(40,30,90,.06);}
+  .fcard:active{transform:translateY(1px);}
+  .fcard .fi{font-size:30px;line-height:1;}
+  .fcard .ft{font-size:14.5px;font-weight:900;}
+  .fcard .fd{font-size:10px;color:var(--muted);line-height:1.3;}
+  .fcard.c1{background:#eef4ff;border:2px solid #cfe0ff;} .fcard.c1 .ft{color:#2f6fed;}
+  .fcard.c2{background:#eafaf1;border:2px solid #c7edd8;} .fcard.c2 .ft{color:#1c8a5a;}
+  .fcard.c3{background:#efeefc;border:2px solid #d9d5ff;} .fcard.c3 .ft{color:var(--indigo-d);}
+  .fcard.c4{background:#fff2f6;border:2px solid #ffd4e2;} .fcard.c4 .ft{color:#d6457f;}
+  .topbar{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.97);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);margin:0 -15px 8px;}
+  .tabbar{display:flex;flex-wrap:wrap;gap:6px;padding:9px 10px;justify-content:center;}
+  .tabbar::-webkit-scrollbar{display:none;}
+  .tab{flex:0 0 auto;border:none;background:#f0eefb;color:var(--muted);font-size:13px;font-weight:800;padding:8px 12px;border-radius:20px;cursor:pointer;}
+  .tab.active{background:var(--indigo);color:#fff;}
+  .tab:active{transform:translateY(1px);}
+  .nfeed{display:flex;flex-direction:column;gap:8px;margin:10px 0;max-height:62vh;overflow-y:auto;padding:2px;}
+  .nfeed .empty{color:#b3b0c0;font-size:13px;text-align:center;padding:24px;}
+  .nmsg{background:#efeefc;border-radius:14px;padding:11px 13px;font-size:14.5px;line-height:1.55;word-break:break-word;}
+  .nmsg a{color:var(--indigo);font-weight:700;word-break:break-all;}
+  .nmsg .nt{font-size:10.5px;color:var(--muted);margin-top:6px;}
+  .nmsg .ncopy{margin-top:9px;display:inline-block;font-size:12px;font-weight:800;color:var(--indigo);background:#fff;border:1px solid var(--line);border-radius:9px;padding:6px 12px;cursor:pointer;}
+  .npost{margin-top:12px;display:flex;flex-direction:column;gap:8px;border-top:1px dashed var(--line);padding-top:12px;}
+  .npost textarea{border:1px solid var(--line);border-radius:12px;padding:11px;font:inherit;font-size:14px;min-height:84px;resize:vertical;}
+  footer{text-align:center;color:#8b8798;font-size:12.5px;margin-top:30px;border-top:1px solid var(--line);padding-top:18px;line-height:1.7;}
+  footer a{color:var(--indigo);font-weight:700;text-decoration:none;}
+  .kakaobtn{display:inline-block;margin-top:11px;background:#FEE500;color:#3c1e1e!important;text-decoration:none;font-weight:800;font-size:13.5px;padding:10px 18px;border-radius:12px;}
+  .foot-co{font-weight:900;color:var(--indigo-d);font-size:14.5px;}
+
+  /* 발표용 폰 화면 토글 */
+  #phoneToggle{position:fixed;left:14px;bottom:16px;z-index:200;background:#33323f;color:#fff;border:none;
+    border-radius:24px;padding:12px 17px;font-size:14px;font-weight:800;box-shadow:0 6px 20px rgba(0,0,0,.28);cursor:pointer;}
+  /* 발표용 버튼은 큰 화면(선생님 노트북)에서만 — 학부모 폰에는 안 보임 */
+  @media (max-width:820px){ #phoneToggle{display:none!important} }
+  /* 처음으로(위로) 버튼 — 스크롤 내리면 나타남 */
+  #toTop{position:fixed;right:16px;bottom:18px;z-index:200;width:54px;height:54px;border-radius:50%;
+    background:var(--indigo);color:#fff;border:none;font-size:22px;font-weight:900;line-height:1;
+    box-shadow:0 6px 20px rgba(91,79,233,.45);cursor:pointer;display:none;align-items:center;justify-content:center;flex-direction:column;}
+  #toTop.show{display:flex;}
+  #toTop small{font-size:9px;font-weight:700;margin-top:1px;}
+  body.phone{background:#413c5e;}
+  body.phone #page{max-width:400px;margin:20px auto 44px;
+    box-shadow:0 0 0 10px #14131c, 0 26px 70px rgba(0,0,0,.45);}
+</style>
+
+<div id="page">
+<header>
+  <a href="#" id="teacherTrigger" class="teacher-top">⚙️ 교사용</a>
+  <p class="kicker">👨‍👩‍👧 파주 AI-ROAD 학부모 연수</p>
+  <h1>AI 시대, 우리 아이 어떻게 키울까요?</h1>
+  <p class="sub">폰으로 편하게 따라오시면 됩니다 · 오늘 딱 하나만 얻어 가셔도 좋아요</p>
+</header>
+
+<div class="wrap">
+  <div class="topbar" id="topbar">
+    <div class="tabbar">
+      <button class="tab" data-goto="home">🏠 홈</button>
+      <button class="tab" data-goto="basic">🧭 AI 기본</button>
+      <button class="tab" data-goto="s9">💬 프롬프트</button>
+      <button class="tab" data-goto="s8">🛠️ 앱만들기</button>
+      <button class="tab" data-goto="gift">🎁 선물</button>
+      <button class="tab" data-goto="notice">📢 공유</button>
+    </div>
+  </div>
+
+  <div class="teacher" id="teacherBox">
+    <h4>⚙️ 교사 설정</h4>
+    <div class="row">
+      <input type="password" id="tpin" inputmode="numeric" maxlength="8" placeholder="비밀번호">
+      <button class="btn dark" id="tunlock">확인</button>
+    </div>
+    <div id="tpanel" hidden>
+      <button class="btn red" id="tReset" style="background:var(--red);margin-top:10px;">🧹 의견 포스트잇 비우기</button>
+      <button class="btn dark" id="tNoticeReset" style="margin-top:8px;">📢 공유 내용 비우기</button>
+      <div class="tnote">학부모 의견·공유 글은 자동으로 저장돼요. 새 연수 전에 이전 내용을 지우려면 해당 버튼을 누르세요. (저장 필요 없음)</div>
+    </div>
+  </div>
+
+  <div class="screen active" data-screen="home">
+  <a class="installbtn" data-goto="install"><span class="ib-t">📲 어플 설치</span><span class="ib-d">먼저 여기서 설치하기 →</span></a>
+
+  <div class="jumplabel">✨ 오늘의 도구 — 눌러서 열기</div>
+  <div class="cardgrid">
+    <a class="fcard c1" data-goto="basic"><span class="fi">🧭</span><span class="ft">AI 기본</span><span class="fd">믿을 수 있게 쓰는 설정</span></a>
+    <a class="fcard c2" data-goto="s9"><span class="fi">💬</span><span class="ft">일상 프롬프트</span><span class="fd">생활에 바로 쓰는 31개</span></a>
+    <a class="fcard c3" data-goto="s8"><span class="fi">🛠️</span><span class="ft">앱 만들기</span><span class="fd">진로 탐색 앱 5종</span></a>
+    <a class="fcard c4" data-goto="gift"><span class="fi">🎁</span><span class="ft">선물</span><span class="fd">곧 공개돼요</span></a>
+  </div>
+
+<a class="installbtn" data-goto="notice" style="background:linear-gradient(135deg,#12b3a6,#0e8f85);"><span class="ib-t">📢 공유 보기</span><span class="ib-d">강사가 나누는 링크·프롬프트가 실시간으로 떠요 →</span></a>
+
+<section id="s1">
+    <h2 class="s">▶️ 여는 이야기</h2>
+    <p class="lead">완벽한 부모가 되자는 게 아니에요. AI를 조금 이해하고, 아이와 한 번 더 대화하기 위한 시간입니다.</p>
+    <div class="sub">💬 이거 하나만 나눠주세요</div>
+    <p>“AI·스마트폰, 우리 아이를 생각하면 <b>가장 걱정되는 것</b> 한 가지”를 적어주세요.</p>
+    <div data-board="p_worry"></div>
+  </section>
+
+  <section id="exp-home">
+    <h2 class="s">🎮 AI 직접 체험</h2>
+    <p class="lead">폰으로 바로 체험해 보세요. AI가 어떻게 배우고, 또 어떻게 틀리는지 느낄 수 있어요.</p>
+<div class="sub">직접 체험해 보세요 (폰으로 바로)</div>
+    <a class="btn dark" href="https://www.whichfaceisreal.com/" target="_blank" rel="noopener">🧑 진짜 얼굴은?<small>AI가 만든 얼굴, 구별할 수 있을까요?</small></a>
+    <a class="btn orange" href="https://quickdraw.withgoogle.com/" target="_blank" rel="noopener">✏️ 퀵드로우<small>AI가 내 낙서를 알아맞혀요 (아이와 함께)</small></a>
+    <a class="btn green" href="https://teachablemachine.withgoogle.com/" target="_blank" rel="noopener">🤖 티처블 머신<small>AI에게 직접 학습시켜 보기 (AI가 배우는 원리 체험)</small></a>
+  </section>
+  </div><!-- /home -->
+
+  <section class="screen" data-screen="install">
+    <h2 class="s">📲 어플 설치</h2>
+    <div class="acchint">AI 앱을 폰에 설치하면 오늘 실습을 바로 따라 할 수 있어요. <b>본인 폰</b>에 맞게 눌러 설치하세요.</div>
+      <div class="appdl"><div class="appname">✨ 제미나이 <span class="mainbadge">오늘 주로 사용</span></div><div class="dlrow"><a class="dlbtn" href="https://play.google.com/store/apps/details?id=com.google.android.apps.bard" target="_blank" rel="noopener">🤖 안드로이드</a><a class="dlbtn" href="https://apps.apple.com/app/google-gemini/id6477489729" target="_blank" rel="noopener">🍎 아이폰</a></div></div>
+      <div class="appdl"><div class="appname">💬 챗GPT</div><div class="dlrow"><a class="dlbtn" href="https://play.google.com/store/apps/details?id=com.openai.chatgpt" target="_blank" rel="noopener">🤖 안드로이드</a><a class="dlbtn" href="https://apps.apple.com/app/chatgpt/id6448311069" target="_blank" rel="noopener">🍎 아이폰</a></div></div>
+      <div class="appdl"><div class="appname">🟠 클로드</div><div class="dlrow"><a class="dlbtn" href="https://play.google.com/store/apps/details?id=com.anthropic.claude" target="_blank" rel="noopener">🤖 안드로이드</a><a class="dlbtn" href="https://apps.apple.com/app/claude-by-anthropic/id6473753684" target="_blank" rel="noopener">🍎 아이폰</a></div></div>
+  </section>
+
+
+
+<section class="screen" data-screen="basic">
+    <h2 class="s">🧭 AI 기본 — 믿을 수 있게 쓰기</h2>
+    <p class="lead">AI는 똑똑하지만, 가끔 없는 사실을 그럴듯하게 지어내기도 해요. 대화를 시작할 때 아래 <b>설정 문장</b>을 한 번 붙여넣으면, 그날 대화 내내 더 정확하게, 출처까지 챙겨서 답해줘요.</p>
+    <div class="tip">💡 <b>쓰는 법</b> — 제미나이(또는 챗GPT)에 <b>새 대화</b>를 열고, 아래 문장을 <b>맨 처음에 한 번</b> 붙여넣으세요. <b>[ ]</b> 안에는 AI가 나를 부를 호칭(예: 아버님, 어머님, 이름)을 적으면 돼요.</div>
+    <div class="pcard"><div class="ptitle">제미나이 맞춤 설정 (정확하게 답하도록)</div><div class="pdesc">근거 없는 추측 금지 · 단계별로 검증 · 출처 URL 제시 · 부족하면 검색까지</div><pre class="ptext">나를 [ ]이라고 불러줘.
+1. 정확성 우선: 확실한 근거가 없으면 '현재 데이터로는 확인할 수 없습니다'라고 정직하게 답변할 것. 추측은 금지한다.
+2. 검증 절차: 답변을 내놓기 전, 반드시 내부적으로 사실 관계를 먼저 나열하고 (Chain of Thought) 그 논리적 흐름에 따라 단계별로 설명할 것.
+3. 링크 첨부: 언급한 수치나 법령, 학술 자료는 가급적 확인할 수 있는 공식 URL을 함께 제시할 것.
+4. 만약 근거가 되는 문서나 데이터가 부족하다면, 추측하지 말고 검색 도구(Google Search)를 활용해서 확인해줘.</pre><button class="copy" type="button" data-o="📋 지침 복사">📋 지침 복사</button></div>
+    <div class="acchint">이 설정은 그날 그 대화에만 적용돼요. 새로 대화를 열면 다시 한 번 붙여넣으면 됩니다.</div>
+
+    <div class="gbox" style="margin-top:44px;">
+    <div class="sub" style="margin-top:2px;">🔎 RAG · 최신성 검색어 추가 프롬프트</div>
+    <div class="acchint">최신 정보가 필요할 때, 자녀 학교급에 맞는 박스를 눌러 펼치고 📋 복사 → 제미나이에 붙여넣어 실행해 보세요.</div>
+    <div class="pcard" style="border:2px solid var(--indigo);background:var(--indigo-l);"><div class="ptitle">🌱 공통 예시 — 어느 학년이든 좋아요</div><div class="pdesc">주말 나들이·체험 장소 찾기</div><pre class="ptext"><span style="color:var(--red);font-weight:700;">최근 6개월 내</span>에 새로 생긴 수도권 근교의 아이와 가볼 만한 체험형 핫플레이스나 박물관 전시 정보를 정리해서 알려줘.
+1. 각 장소마다 방문 전 예약 꿀팁과 예약 사이트(공식 예약 페이지 링크)를 함께 알려줘.
+2. 각 장소의 주소와 구글 지도 링크(지도 앱에서 열 수 있는 검색 링크)도 함께 알려줘. 링크가 정확한지 확실하지 않으면, 장소명+지역으로 지도에서 직접 검색하라고 안내해 줘.</pre><button class="copy" type="button">📋 프롬프트 복사</button>
+      <a class="dlbtn" style="display:block;margin-top:9px;background:#fff;border-color:var(--indigo);" href="https://share.gemini.google/98wcfWi4SH6f" target="_blank" rel="noopener">🔗 예시 대화 결과 보기</a></div>
+    <details class="acc"><summary><span style="display:flex;flex-direction:column;gap:2px;"><span>🔍 주말 나들이·체험 장소 찾기 — 우리 집 맞춤 버전</span><span style="font-weight:600;font-size:12.5px;color:var(--muted);">아이·조건을 넣고 표로 받고, 지어내기 방지까지</span></span></summary><div class="accbody">
+      <div class="pcard"><pre class="ptext">[역할]
+당신은 아이와 함께하는 주말 나들이를 돕는 지역 정보 큐레이터입니다.
+
+[요청]
+<span style="color:var(--red);font-weight:700;">최근 6개월 내</span>에 새로 생겼거나 새로 시작한 [수도권 근교 / 우리 동네·시군구]의, 아이와 가볼 만한 체험형 장소·박물관·전시를 찾아 정리해 주세요.
+
+[우리 집 정보]
+1. 아이: <span style="color:var(--blue);font-weight:700;">[나이·학년]</span>, 관심사 <span style="color:var(--blue);font-weight:700;">[예: 공룡, 우주, 만들기, 물놀이]</span>
+2. 동행: <span style="color:var(--blue);font-weight:700;">[성인 O명·아이 O명]</span>
+3. 이동: 자가용 <span style="color:var(--blue);font-weight:700;">[편도 O분 이내]</span>
+4. 예산: <span style="color:var(--blue);font-weight:700;">[O만 원 이하]</span>
+5. 장소 유형: <span style="color:var(--blue);font-weight:700;">[실내 / 야외 / 상관없음]</span>
+6. 방문 예정: <span style="color:var(--blue);font-weight:700;">[날짜·요일]</span>
+
+[정리 방법] 추천 4~5곳을 아래 항목으로 표로 정리해 주세요.
+① 장소명
+② 새로 생기거나 전시가 시작된 시점
+③ 우리 아이에게 좋은 이유
+④ 예상 소요시간·비용
+⑤ 예약 방법·꿀팁과 예약 사이트(공식 예약 페이지 링크)
+⑥ 비 올 때 실내 대안
+⑦ 주소와 구글 지도 링크(지도 앱에서 열 수 있는 검색 링크)
+
+[정확성 규칙]
+1. 운영시간·휴무일·요금·예약 조건은 자주 바뀌니, 확실하지 않은 정보는 '확인 필요'로 표시할 것.
+2. 가능하면 공식 홈페이지 URL을 함께 제시할 것.
+3. 없는 장소를 지어내지 말고, 정보가 부족하면 검색 도구로 확인한 뒤 알려 줄 것.
+4. 구글 지도 링크가 정확한지 확실하지 않으면, 장소명+지역으로 지도에서 직접 검색하라고 안내할 것.</pre><button class="copy" type="button">📋 프롬프트 복사</button>
+      <a class="dlbtn" style="display:block;margin-top:9px;background:#fff;border-color:var(--indigo);" href="https://share.gemini.google/aYFi95TUaHiV" target="_blank" rel="noopener">🔗 예시 대화 결과 보기</a></div>
+    </div></details>
+    <details class="acc"><summary>🐣 초등 저학년 (1~3학년)</summary><div class="accbody">
+      <div class="pcard"><pre class="ptext"><span style="color:var(--red);font-weight:700;">최근 6개월 내</span> 교육 커뮤니티와 뉴스에서 가장 많이 언급된 초등학교 저학년(1~3학년) 학부모들의 독서 및 국어 교육 관련 고민 키워드는 뭐야? 특히 1~2학년 시기 문해력 격차를 줄이기 위해 가정에서 실천할 수 있는 현실적인 지도 팁이 있다면 요약해 줘.</pre><button class="copy" type="button">📋 프롬프트 복사</button>
+      <a class="dlbtn" style="display:block;margin-top:9px;background:var(--indigo-l);border-color:var(--indigo);" href="https://share.gemini.google/ri6kM7UGOzAq" target="_blank" rel="noopener">🔗 예시 대화 결과 보기</a></div>
+    </div></details>
+    <details class="acc"><summary>📗 초등 고학년 (4~6학년)</summary><div class="accbody">
+      <div class="pcard"><pre class="ptext"><span style="color:var(--red);font-weight:700;">최근 6개월간</span> 초등학교 고학년 아이들 사이에서 유행하는 유튜브 숏폼 트렌드, 밈(Meme), 인기 게임과 함께, 현재 또래 집단에서 실제로 자주 쓰이는 대표적인 은어(신조어·줄임말) 5가지 이상과 그 정확한 뜻을 반드시 포함해서 알려줘.
+그리고 사춘기에 접어들기 시작하는 고학년 자녀와 부담스럽지 않게 소통하며 대화의 물꼬를 틀 수 있도록, 위에서 언급한 은어나 밈을 주제로 활용하는 대화 질문 3가지만 추천해 줘.</pre><button class="copy" type="button">📋 프롬프트 복사</button>
+      <a class="dlbtn" style="display:block;margin-top:9px;background:var(--indigo-l);border-color:var(--indigo);" href="https://share.gemini.google/A1URyldreBfX" target="_blank" rel="noopener">🔗 예시 대화 결과 보기</a></div>
+    </div></details>
+    <details class="acc"><summary>📘 중등</summary><div class="accbody">
+      <div class="pcard"><pre class="ptext"><span style="color:var(--red);font-weight:700;">최근 6개월 내</span> 중학생 학부모들이 가장 많이 고민하는 진로·자유학기제 관련 이슈는 뭐야? 특히 요즘 중학생들 사이에서 관심이 높은 직업·진로 분야의 최신 트렌드를 알려주고, 사춘기 자녀에게 진로를 강요하지 않으면서 관심을 넓혀줄 수 있는 대화 질문 3가지를 추천해 줘.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+      <div class="pcard"><pre class="ptext"><span style="color:var(--red);font-weight:700;">최근 6개월간</span> 중학생들 사이에서 유행하는 숏폼이나 밈(Meme), 인기 있는 게임 캐릭터를 알려줘. 중2 자녀와 대화의 물꼬를 틀 수 있는 자연스러운 질문 3가지만 추천해 줘.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+      <div class="pcard"><pre class="ptext"><span style="color:var(--red);font-weight:700;">최근 6개월 내</span> 교육 커뮤니티와 뉴스에서 가장 많이 언급된 중학생 학부모들의 고민 키워드는 뭐야? 특히 고등학교 선택(특목고/자사고 vs 일반고)과 관련해 최근 바뀐 분위기가 있다면 요약해 줘.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+    </div></details>
+    <details class="acc"><summary>📙 고등</summary><div class="accbody">
+      <div class="pcard"><pre class="ptext"><span style="color:var(--red);font-weight:700;">최근 6개월 내</span> 발표된 대입 제도나 고등학생 학습·진로 관련 최신 이슈 중 학부모가 꼭 알아야 할 것은 뭐야? 확인되지 않은 소문은 제외하고 공식 자료를 기준으로 정리해 주고, 입시 스트레스를 자극하지 않으면서 자녀와 진로를 이야기할 수 있는 질문 3가지를 추천해 줘.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+      <div class="pcard"><div class="pdesc">💗 수험생 컨디션·식단 (상시)</div><pre class="ptext">수험 스트레스가 큰 고등학생 자녀의 컨디션을 챙겨주고 싶어. 집중력과 수면에 도움이 되는 생활 습관, 그리고 바쁜 아침이나 야식 대신 간단히 챙겨줄 수 있는 균형 잡힌 간식·식단 아이디어를 정리해 줘. 자녀를 압박하지 않으면서 컨디션을 물어보고 대화할 수 있는 말 3가지도 추천해 줘. 건강에 이상이 느껴지면 전문가와 상담하도록 안내해 줘.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+    </div></details>
+    </div><!-- /RAG box -->
+
+    <div class="gbox" style="margin-top:56px;">
+    <div class="sub" style="margin-top:2px;">🎓 제미나이 가이드 학습</div>
+    <p class="lead" style="margin-top:2px;">정답을 바로 알려주는 대신, 질문과 단계별 설명으로 <b>아이가 스스로 이해</b>하도록 이끄는 'AI 개인 교사' 모드예요. 자녀 공부를 도와줄 때 딱 좋아요.</p>
+    <div class="acchint">이렇게 주제만 툭 던져도 돼요 — 예: "로그함수를 알고 싶어." 그러면 개념부터 차근차근 이끌어줘요. 아래는 자녀 학교급별 예시예요.</div>
+    <div class="tip">💡 <b>역사·시사처럼 '사실'이 중요한 주제</b>는 조금 달라요. "산업혁명이 왜 일어났을까?"처럼 <b>흐름·이유를 이해하는 질문</b>엔 아주 강하지만, 연도·순서 같은 <b>정확한 암기</b>는 교과서로 확인하는 게 안전해요. 역사를 물을 땐 아래처럼 <b>확인 장치</b>를 붙이세요.</div>
+    <div class="pcard"><div class="pdesc">📜 역사·사회 (확인 장치 포함)</div><pre class="ptext">'조선 후기의 사회 변화'를 초등생 수준으로 쉽고 재미있게 알려줘. 단, 교과서·공식 자료를 기준으로 하고, 확실하지 않은 내용은 '확인 필요'라고 표시해 줘.</pre></div>
+    <details class="acc"><summary>🐣 초등 저학년 (1~3학년)</summary><div class="accbody">
+      <div class="pcard"><pre class="ptext">초등 2학년이 이해할 수 있게 '왜 낮과 밤이 생길까?'</pre><button class="copy" type="button">📋 프롬프트 복사</button>
+      <a class="dlbtn" style="display:block;margin-top:9px;background:#fff;border-color:var(--indigo);" href="https://share.gemini.google/COJ0aCxS8qKF" target="_blank" rel="noopener">🔗 예시 대화 결과 보기</a></div>
+      <div class="pcard"><pre class="ptext">초등 3학년이 이해할 수 있게 '나눗셈의 뜻(똑같이 나누기)'을 알려줘.</pre><button class="copy" type="button">📋 프롬프트 복사</button>
+      <a class="dlbtn" style="display:block;margin-top:9px;background:#fff;border-color:var(--indigo);" href="https://share.gemini.google/AH5DYB4XIbTE" target="_blank" rel="noopener">🔗 예시 대화 결과 보기</a></div>
+    </div></details>
+    <details class="acc"><summary>📗 초등 고학년 (4~6학년)</summary><div class="accbody">
+      <div class="pcard"><pre class="ptext">초등 5학년이 이해할 수 있게 '민주주의'를 알려줘.</pre><button class="copy" type="button">📋 프롬프트 복사</button>
+      <a class="dlbtn" style="display:block;margin-top:9px;background:#fff;border-color:var(--indigo);" href="https://share.gemini.google/kjpHJyIvr0HU" target="_blank" rel="noopener">🔗 예시 대화 결과 보기</a></div>
+      <div class="pcard"><pre class="ptext">초등 6학년이 이해할 수 있게 '기후 변화'를 알려줘.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+      <div class="pcard"><pre class="ptext">초등 6학년이 이해할 수 있게 '분수의 나눗셈'을 알려줘.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+    </div></details>
+    <details class="acc"><summary>📘 중등</summary><div class="accbody">
+      <div class="pcard"><pre class="ptext">'일차함수'를 초등생 수준으로 쉽고 재미있게 알려줘.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+      <div class="pcard"><pre class="ptext">'광합성과 호흡의 차이'를 초등생 수준으로 쉽고 재미있게 알려줘.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+      <div class="pcard"><pre class="ptext">'수요와 공급'을 초등생 수준으로 쉽고 재미있게 알려줘.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+      <div class="pcard"><pre class="ptext">서술형 답을 잘 쓰는 기본 구조(주장 → 근거 → 예시)를 쉬운 예시와 함께 알려줘.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+    </div></details>
+    <details class="acc"><summary>📙 고등</summary><div class="accbody">
+      <div class="pcard"><pre class="ptext">'미적분의 극한'을 초등생 수준으로 쉽고 재미있게 알려줘.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+      <div class="pcard"><pre class="ptext">'수열의 뜻'을 초등생 수준으로 쉽고 재미있게 알려줘.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+      <div class="pcard"><pre class="ptext">'지수와 로그'를 초등생 수준으로 쉽고 재미있게 알려줘.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+      <div class="pcard"><div class="pdesc">✍️ 서·논술형 답안 첨삭</div><pre class="ptext">내 서술형·논술형 답안을 첨삭해 줘. 정답을 대신 써주지 말고, 주장·근거·논리 구조에서 부족한 부분을 스스로 보완하도록 질문으로 이끌어줘. 마지막에 고칠 점 3가지만 짚어줘. [문제와 내 답안 붙여넣기]</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+    </div></details>
+    </div><!-- /가이드학습 box -->
+  </section>
+
+<section id="s8" class="screen" data-screen="s8">
+    <h2 class="s">🛠️ 앱 만들기</h2>
+    <p class="lead">복사해서 <b>제미나이 Canvas</b>에 붙여넣으면 자녀 학교급에 맞는 진로 탐색 앱이 만들어져요. 앱에는 실명·학교명 대신 <b>별명</b>을 쓰세요.</p>
+<details class="acc star" open><summary>🛠️ 앱 만들기 <span style="font-weight:700;font-size:12px;color:var(--muted);">5개</span></summary><div class="accbody"><div class="acchint">제미나이 Canvas에 붙여넣어 학교급별 진로 탐색 앱을 만드는 프롬프트 · 복사해서 <b>제미나이 Canvas</b>에 붙여넣으면 앱이 만들어져요.</div>
+        <div class="pcard"><div class="ptitle">초등 저학년 · 꿈 씨앗 리포트</div><pre class="ptext">[역할 정의]
+너는 초등 저학년 아이의 흥미를 놀이로 발견해주는 &#x27;진로놀이 전문가&#x27;이자, 친근하고 귀여운 웹 애플리케이션을 제작하는 전문 UI/UX 개발자야. 부모가 아이에 대해 단계별 질문에 답하면, 그 결과를 바탕으로 맞춤형 &#x27;꿈씨앗 탐험 리포트&#x27;를 동적으로 생성하는 단일 HTML 웹 앱(캔버스/아티팩트)을 만들어줘.
+[앱 주요 기능 및 단계별 동작 흐름]
+1. 1단계: 대화형 인터뷰 위저드 (Interview Wizard UI)
+- 시작 화면에서 &#x27;아이 별명&#x27;(실명·학교명 수집 금지)과 &#x27;학년&#x27;을 입력받습니다.
+- 아래 8가지 질문을 3개 카테고리로 나누어 한 번에 하나씩 카드 형태로 진행합니다:
+[카테고리 A. 몰입 &amp; 관심사]
+① 요즘 가장 몰입해서 시간 가는 줄 모르는 놀이·활동
+② 푹 빠져 있는 특정 분야/대상 (예: 공룡, 우주, 곤충, 자동차, 그림, 로봇 등)
+③ 혼자 놀 때 주도적으로 탐색하는 방식 (예: 해부/분해, 만들기/조합, 관찰/기록, 수집/정리)
+[카테고리 B. 성향 &amp; 반응]
+④ 5가지 스타일 중 아이가 가장 끌리는 활동 2가지 (만들기 / 이야기 / 몸 놀기 / 관찰·탐험 / 꾸미기)
+⑤ 새로운 교구나 장소를 접했을 때 보이는 반응 (적극 탐색형 / 관찰 후 신중하게 참여 / 부모와 함께 시도)
+⑥ 문제를 만났을 때 해결하는 방식 (끝까지 혼자 시도 / 바로 도움 요청 / 다른 방법으로 전환)
+[카테고리 C. 사회성 &amp; 장래희망]
+⑦ 친구나 가족과 함께할 때 자연스럽게 맡는 역할 (리더 / 아이디어 제시 / 조력자 / 분위기 메이커)
+⑧ &quot;커서 이거 해보고 싶다&quot;고 언급한 적이 있는지 여부 (없으면 패스 가능)
+- 각 질문에는 부모의 빠른 입력을 돕는 객관식 선택 버튼과 상세 입력용 텍스트 필드를 함께 제공합니다.
+- 답변마다 따뜻한 1줄 공감 및 반응 문구가 상단에 노출됩니다.
+- 8번 질문 완료 후 &quot;꿈씨앗 탐험 리포트 생성하기&quot; 버튼이 활성화됩니다.
+2. 2단계: 꿈씨앗 탐험 리포트 화면 (Dynamic Report UI)
+- 인터뷰 응답 데이터를 바탕으로 화면이 부드럽게 전환되며 시각화 결과를 제공합니다.
+- 히어로 섹션: &quot;[별명]의 꿈씨앗 탐험 🌱&quot;, 학년 표기, 맞춤형 1줄 응원.
+- 흥미 별자리: 8개 답변을 종합 분석하여 성향(만들기, 이야기, 탐험, 도움, 움직임, 분석 등)을 직관적인 별/아이콘 크기로 시각화.
+- 관심 세계 4~5개: 핵심 관심사 기반 대표 세계(예: 탐구자 세계, 창작자 세계 등) 구축, 1줄 설명 및 관련 직업 아이콘 2~3개 배치.
+- 추천 놀이·체험 4가지: 집이나 야외에서 바로 적용 가능한 맞춤형 확장 활동.
+- 닮은 이야기·위인 친구들: 아이의 탐색·몰입 스타일과 닮은 역사/동화/위인 인물 2~3명(어릴 적 에피소드 연결) 및 추천 도서 2권.
+- 부모 관찰 팁: 흥미를 지속해서 키워줄 수 있는 대화법 및 상호작용 지침 3가지.
+- 하단 안내: &quot;이 리포트는 아이의 흥미 씨앗을 발견하는 놀이용 자료예요. 진로를 정하는 게 아니에요.&quot; 및 [인쇄 / PDF 저장] 버튼.
+[디자인 및 기술 구현 조건]
+- 단일 HTML: HTML, CSS, JavaScript를 하나의 파일로 완성할 것.
+- 외부 라이브러리: Tailwind CSS CDN, Google Fonts (Noto Sans KR CDN) 활용.
+- 디자인 스타일: 파스텔 톤 둥근 카드 UI(rounded-2xl/3xl), 큰 이모지 활용, 단계 전환 프로그레스 바(Progress Bar) 배치.
+- 데이터 처리: localStorage 사용 금지, 세션 내 자바스크립트 객체(State)로 데이터 관리, 반응형 대응.</pre><button class="copy" type="button">📋 프롬프트 복사</button><a class="dlbtn" style="display:block;margin-top:9px;background:#fff;border-color:var(--indigo);" href="https://share.gemini.google/SZOGUyM8MkC1" target="_blank" rel="noopener">🚀 완성 앱 열기 →</a></div>
+        <div class="pcard"><div class="ptitle">초등 고학년 · 강점 리포트</div><pre class="ptext">[역할 정의]
+너는 초등 고학년(4~6학년) 아이의 고유한 강점과 자기주도적 잠재력을 발굴하는 &#x27;자기이해·진로 코치&#x27;이자, 세련되고 현대적인 웹 애플리케이션을 제작하는 UI/UX 개발자야. 부모(또는 아이 본인)가 8가지 강점 진단 질문에 답하면, 이를 종합 분석하여 맞춤형 &#x27;드림 스파크(Dream Spark) 강점 나침반 리포트&#x27;를 동적으로 생성하는 단일 HTML 웹 앱(캔버스/아티팩트)을 만들어줘.
+[앱 주요 기능 및 단계별 동작 흐름]
+1. 1단계: 강점 진단 위저드 (Strength Assessment Wizard)
+- 상단에 현재 진행 단계(예: 1/8 Step)와 프로그래스 바를 표시합니다.
+- 개인정보 보호를 위해 실명·학교명은 받지 않으며, 별명과 학년(4학년/5학년/6학년)만 입력받습니다.
+- 각 질문 카드는 상단에 파스텔 톤의 &#x27;카테고리 뱃지(Badge)&#x27;를 배치하여 질문의 주제와 의도를 직관적으로 안내합니다.
+- 초등 고학년의 학습, 문제 해결, 또래 관계, 몰입 패턴을 분석하는 8가지 질문을 순서대로 제공합니다:
+① [👤 기본 정보] 별명과 학년을 선택해주세요.
+② [💡 문제 해결] 어려운 과제나 복잡한 문제에 부딪혔을 때 아이는 주로 어떻게 해결하나요? (예: 논리적으로 차근차근 분석, 창의적인 새로운 방법 시도, 주변에 질문해 정보 수집, 일단 직접 시도하며 수정)
+③ [✨ 특기·재능] 주변 사람들이나 친구들에게 &quot;너 이거 진짜 잘한다!&quot;라고 인정받거나 빠르게 습득하는 분야는 무엇인가요? (예: 요약·정리, 디자인·표현, 설득·발표, 분위기 중재, 원리 파악 등)
+④ [🔥 몰입 영역] 누가 시키지 않아도 스스로 탐구하거나 과몰입하는 영역은 무엇인가요? (예: 코딩/디지털, 역사/과학 조사, 글로 쓰기/이야기 구성, 스포츠/전략 게임, 만들기/기획)
+⑤ [🤝 모둠·관계] 학교 모둠 활동이나 팀 프로젝트에서 주로 맡는 역할은 무엇인가요? (예: 팀을 이끄는 리더, 아이디어를 내는 기획자, 자료를 조사하는 탐구가, 결과를 깔끔하게 만드는 정리·제작자, 의견을 조정하는 중재자)
+⑥ [🌱 회복탄력성] 피드백을 받거나 실패했을 때 아이의 반응과 행동 패턴은 어떤가요? (예: 원인을 분석해 다시 도전, 새로운 방식을 찾아 전환, 조언을 적극 수용, 자기만의 시간 후 재기)
+⑦ [🏆 성취감] 아이가 가장 깊은 보람과 성취감을 느끼는 순간은 언제인가요? (예: 복잡한 난제를 스스로 풀어냈을 때, 누군가에게 도움을 주고 변화시켰을 때, 내 작품/결과물이 인정받았을 때, 목표를 달성해 냈을 때)
+⑧ [🧭 미래 비전] 아이가 관심을 갖는 사회적 테마나 미래 분야는 무엇인가요? (예: AI·첨단기술, 환경·지구, 예술·콘텐츠, 사람·보건·교육, 비즈니스·기획 등)
+- 질문마다 부모가 쉽게 선택할 수 있는 객관식 버튼과 직접 입력창을 제공하며, 각 입력마다 다정한 응원 문구를 노출합니다.
+2. 2단계: 드림 스파크 강점 나침반 리포트 (Dynamic Report Dashboard)
+- 8가지 응답 데이터를 종합 분석하여 고학년 수준에 맞는 깊이 있는 리포트를 동적으로 렌더링합니다.
+- 히어로 섹션: &quot;[별명]의 드림 스파크 강점 나침반 🧭&quot;, 학년, 핵심 강점 대표 키워드 3가지 및 한 줄 비전 응원.
+- 5대 강점 펜타곤/별자리: 5가지 강점 영역(분석·논리, 창의·기획, 공감·소통, 실행·리더십, 탐구·몰입)의 비중을 직관적인 다이어그램 또는 바 그래프로 표현.
+- 대표 강점 TOP 3 심층 분석: 아이의 핵심 강점 3가지 + 이 강점이 발휘되는 실제 상황 + 추천 진로 및 전문 분야 계열.
+- 자기주도 챌린지 프로젝트 4가지: 방학이나 주말에 직접 기획해서 해볼 수 있는 고학년 맞춤 탐구·창작 프로젝트 추천.
+- 닮은 꼴 멘토 &amp; 롤모델: 비슷한 강점과 문제를 해결했던 역사적 인물/현대 리더 2~3명의 에피소드 + 함께 읽으면 좋은 도서/청소년 필독서 2권 추천.
+- 부모 코칭 가이드: 강점을 단점으로 오해하지 않고 자율성을 존중하며 키워주는 상호작용 팁 3가지.
+- 하단 안내: 진로 결정용이 아닌 잠재력 발견 안내문 + [리포트 인쇄 / PDF 저장] 버튼.
+[디자인 및 기술 구현 조건]
+- 타깃 디자인: 모던하고 깔끔한 대시보드 스타일(인디고, 테일, 파스텔 어반 톤, 둥근 카드)을 적용하여 유아스러운 연출 배제.
+- 단일 HTML: HTML, CSS, JavaScript를 하나의 파일로 완성할 것.
+- 외부 라이브러리: Tailwind CSS CDN, Google Fonts (Noto Sans KR CDN) 활용.
+- 데이터 및 보안: localStorage 사용 금지 (JavaScript State로 메모리 내 관리), 반응형 레이아웃 지원.</pre><button class="copy" type="button">📋 프롬프트 복사</button><a class="dlbtn" style="display:block;margin-top:9px;background:#fff;border-color:var(--indigo);" href="https://share.gemini.google/4DXFVSVXm0KL" target="_blank" rel="noopener">🚀 완성 앱 열기 →</a></div>
+        <div class="pcard"><div class="ptitle">중등 · 진로 탐색</div><pre class="ptext">[역할 정의]
+너는 자유학기제 및 진로탐색 시기의 중학생을 위한 &#x27;AI 진로 상담 전문가&#x27;이자, 프레젠테이션 시연에 적합한 세련되고 현대적인 웹 애플리케이션을 제작하는 UI/UX 개발자야. 부모(또는 학생)가 8가지 진로 진단 질문에 답하면, 이를 종합 분석하여 맞춤형 &#x27;중학생 진로 탐색 리포트&#x27;를 동적으로 생성하는 단일 HTML 웹 앱(캔버스/아티팩트)을 만들어줘.
+[앱 주요 기능 및 단계별 동작 흐름]
+1. 1단계: 진로 탐색 진단 위저드 (Diagnosis Wizard UI)
+- 상단에 현재 진행 단계(예: 1/8 Step)와 세련된 민트 컬러의 프로그래스 바를 표시합니다.
+- 개인정보 보호를 위해 실명·학교명은 수집하지 않으며, 아이의 별명과 학년(중1/중2/중3)만 입력받습니다.
+- 각 질문 카드는 상단에 파스텔/민트 톤의 &#x27;카테고리 뱃지(Badge)&#x27;를 배치하여 진단 의도를 직관적으로 안내합니다.
+- 중학생의 학습 성향, 홀랜드(RIASEC) 흥미 요소, 일하는 스타일, 가치관을 분석하는 8가지 질문을 순서대로 제공합니다:
+① [👤 기본 정보] 별명과 학년을 선택해주세요.
+② [🔥 몰입 관심사] 요즘 가장 흥미를 느끼거나 푹 빠져 있는 관심사/활동은 무엇인가요?
+③ [✨ 핵심 강점] 스스로 생각하거나 주변에서 인정받는 나만의 강점과 잘하는 것은 무엇인가요?
+④ [📚 교과 선호도] 가장 좋아하는 과목과 상대적으로 부담스러운 과목은 무엇인가요?
+⑤ [🧩 작업 스타일] 성격 및 선호하는 작업 방식은 어떤가요? (예: 혼자 집중 vs 팀 협력 / 사전 계획형 vs 유연한 즉흥형)
+⑥ [🎯 활동 유형] 가장 깊게 몰입하는 활동 형태는 무엇인가요? (예: 만들기·제작 / 탐구·분석 / 사람 돕기·상담 / 발표·설득 / 정리·기획)
+⑦ [💎 핵심 가치] 삶과 미래 직업에서 가장 소중히 여기는 가치는 무엇인가요? (예: 안정, 창의성, 사회적 기여, 도전, 사회적 인정 등)
+⑧ [🚀 미래 희망] 현재 관심 있거나 탐색해보고 싶은 직업·분야가 있다면 무엇인가요? (없어도 괜찮음)
+- 질문마다 사용자가 쉽게 선택할 수 있는 객관식 버튼과 직접 입력창을 함께 제공하며, 입력 시 다정한 한 줄 응원 메시지를 노출합니다.
+2. 2단계: 중학생 맞춤 진로 탐색 리포트 (Dynamic Career Report Dashboard)
+- 8가지 응답 데이터를 종합 분석하여 발표/시연용으로 세련된 대시보드 리포트를 동적으로 렌더링합니다.
+- 히어로 섹션: &quot;[별명]의 진로 탐색 리포트 🧭&quot;, 학년, 작성일, 핵심 특성을 담은 한 줄 비전 응원 메시지.
+- 강점 프로필 (RIASEC 분석): 홀랜드 6가지 흥미 유형(현장/탐구/예술/사회/진취/관습)을 인라인 SVG 육각형 레이더 차트로 시각화하고, 상위 2~3개 대표 유형의 특징을 설명.
+- 추천 진로 카드 5개 (매치율순 정렬): 실제 존재하는 구체적 직업(전통적 전문직 + 최신·유망 직업 조합), 매치율(%) 및 시각적 진행바 애니메이션, 아이 특성과의 연결 이유, 하는 일 요약(2줄), 핵심 역량 태그 3개, 관련 고교 계열/연계 정보(예: 일반고, 과학고, 특성화고, 마이스터고 등), 이 분야 대표 인물 1명 한 줄 소개.
+- 지금 해볼 것 (자유학기 활용): 진로체험, 직업인 인터뷰, 동아리 활동 등 3~4가지 실천 과제.
+- 중장기 학습 로드맵: 고교 진학 및 미래 직업을 위해 지금부터 준비하면 좋은 교과 과목과 핵심 기술/역량.
+- 태그 키워드: 아이의 특성을 상징하는 해시태그 5개.
+- 롤모델 &amp; 닮은 인물: 아이의 성향 및 추천 진로와 연결되는 역사적/현대 인물 3~4명의 [이름]·[분야]·[진로 여정 한 줄]·[아이와의 닮은 점] + 연관 추천 도서/다큐멘터리 2~3가지.
+- 부모 코칭 가이드: 아이의 자율성을 존중하고 진로 탐색을 돕는 부모 팁 3가지 + 자유학기제 알찬 활용 팁 1줄.
+- 하단 안내: 진로 확정이 아닌 탐색용 자료임을 명시하는 안내문 + [리포트 인쇄 / PDF 저장] 버튼.
+[디자인 및 기술 구현 조건]
+- 톤앤매너: 세련되고 전문적인 딥블루(Deep Blue) + 민트(Mint) + 화이트 컬러 파레트, 카드 인터페이스 및 은은한 그림자 효과.
+- 애니메이션: 화면 진입 효과, 카드/버튼 hover 효과, 매치율 그래프 채우기 애니메이션.
+- 단일 HTML(HTML/CSS/JS 한 파일), Tailwind CSS CDN, Google Fonts(Noto Sans KR CDN), localStorage 사용 금지(JS State로 메모리 관리), 반응형, 실명/학교명 노출 방지.</pre><button class="copy" type="button">📋 프롬프트 복사</button><a class="dlbtn" style="display:block;margin-top:9px;background:#fff;border-color:var(--indigo);" href="https://share.gemini.google/qLWrdpTnb8mu" target="_blank" rel="noopener">🚀 완성 앱 열기 →</a></div>
+        <div class="pcard"><div class="ptitle">고등 · 진로 결정 전</div><pre class="ptext">[역할 정의]
+너는 고등학생의 입시·계열 선택과 진로·전공 설계를 돕는 &#x27;진로·진학 상담 전문가&#x27;이자, 시연용으로 세련되고 신뢰감 있는 대시보드 웹 애플리케이션을 제작하는 UI/UX 개발자야. 부모(또는 학생)가 8가지 진로·학업 진단 질문에 답하면, 이를 종합 분석하여 맞춤형 &#x27;고등 진로·전공 탐색 리포트&#x27;를 동적으로 생성하는 단일 HTML 웹 앱(캔버스/아티팩트)을 만들어줘.
+1단계: 진로·전공 진단 위저드 — 상단 진행 단계/프로그래스 바, 실명·학교명 수집 금지(별명과 학년/계열: 고1~고3, 문과·이과·예체능·미정만 입력), 각 질문 카드에 카테고리 뱃지. 8가지 질문:
+① [👤 기본 정보] 별명과 학년·계열
+② [🔥 몰입 분야] 요즘 깊이 빠져 있거나 관심 있는 분야/주제
+③ [✨ 핵심 강점] 스스로 생각하거나 교과 활동 중 뛰어난 성과/역량을 보인 부분
+④ [📚 과목 선호도] 좋아하는 과목과 어려워하거나 부담스러운 과목
+⑤ [🧩 성향·작업 스타일] (혼자 연구 vs 팀 프로젝트 / 계획형 vs 즉흥형 / 분석형 vs 실행형)
+⑥ [🎯 몰입 활동 유형] (탐구·연구 / 만들기·개발 / 사람 돕기·소통 / 기획·설득 / 관리·분석)
+⑦ [💎 핵심 가치] (안정, 높은 성취, 사회적 기여, 창의성, 자율성 등)
+⑧ [🚀 희망 전공·직업] 현재 희망하거나 관심 있는 학과/직업(없어도 괜찮음)
+각 질문에 객관식 버튼 + 직접 입력창, 입력 시 다정한 한 줄 응원.
+2단계: 고등 맞춤 진로·전공 탐색 리포트 — 히어로(&quot;[별명]의 진로·전공 탐색 리포트 🧭&quot;, 학년/계열, 작성일, 한 줄 응원), 강점·흥미 프로필(홀랜드 RIASEC 인라인 SVG 육각형 레이더 + 상위 2~3유형), 추천 진로·학과 카드 4~5개(매치율순: 실제 구체 직업/직무명(전통+최신), 매치율% 진행바, 연결 이유, 하는 일 2줄, 관련 학과·전공, 필요 역량 태그 3개, 진학 경로 한 줄, 대표 인물/전문가 1명), 지금 해볼 것(학종 대비 교과 탐구 주제·세특 아이디어, 진로 연계 독서·활동, &#x27;AI를 탐구 도구로 활용하는 법&#x27; 3~4가지), 학업·역량 로드맵(계열별 고교 선택 과목 가이드+단계별 역량), 태그 키워드 5개, 롤모델·닮은 인물/전문가 3~4명([이름]·[분야]·[전공→진로 경로]·[닮은 점] + 추천 도서·인터뷰·강연 2~3), 부모 코칭 가이드(입시 스트레스를 자극하지 않는 대화 팁 3), 하단 안내문 + [인쇄/PDF 저장] 버튼.
+[기술] 딥블루+민트+화이트, 진입/hover/매치율 애니메이션, 단일 HTML, Tailwind·Noto Sans KR(CDN), localStorage 금지(JS State), 반응형, 실명/학교명 노출 방지.</pre><button class="copy" type="button">📋 프롬프트 복사</button><a class="dlbtn" style="display:block;margin-top:9px;background:#fff;border-color:var(--indigo);" href="https://share.gemini.google/q2MRfIPUYgkE" target="_blank" rel="noopener">🚀 완성 앱 열기 →</a></div>
+        <div class="pcard"><div class="ptitle">고등 · 진로 결정 후 (전공 심화·세특)</div><pre class="ptext">[역할 정의]
+너는 고등학생의 희망 전공을 구체화하고 교과 세특(세부능력 및 특기사항) 탐구 주제와 학업 로드맵을 설계해주는 &#x27;진학·전공 심화 코치&#x27;이자, 프레젠테이션 및 시연용 대시보드 웹 애플리케이션을 제작하는 UI/UX 개발자야. 부모(또는 학생)가 8가지 전공·학업 질문에 답하면, 맞춤형 &#x27;고등 전공 심화 &amp; 세특 탐구 리포트&#x27;를 동적으로 생성하는 단일 HTML 웹 앱(캔버스/아티팩트)을 만들어줘.
+1단계: 전공 심화 &amp; 학업 진단 위저드 — 상단 진행 단계/프로그래스 바, 실명·학교명 수집 금지(별명·학년/계열). [입력 UI 제약] 모든 질문 카드에 &#x27;빠른 선택용 예시 칩&#x27;과 &#x27;자유 직접 입력창&#x27;을 동시 배치하고, 사용자가 직접 작성한 학과·관심사·과목·주제를 분석에 최우선 반영. 8가지 질문:
+① [👤 기본 정보] 별명·학년·희망 계열·분야(칩: IT·소프트웨어, 생명·보건, 경영·경제, 미디어·디자인, 공학, 인문·사회 + 자유 입력)
+② [🔬 세부 관심 주제] 더 깊이 알아보고 싶은 세부 주제/키워드(칩 + 자유 입력)
+③ [📚 강점 교과 &amp; 학습 스타일] 강점 과목과 자신 있는 학습 방식(개념 분석, 탐구 보고서 작성, 데이터/실험 분석, 발표·토론 + 자유 입력)
+④ [🧩 선택 과목 현황] 이수 중/고민 중 선택 과목(일반선택/진로선택)(칩 + 자유 입력)
+⑤ [🎯 탐구 활동 스타일] 수행평가/탐구 보고서 선호 방식(논문·문헌 조사 / 데이터 분석·실험 / AI tools 활용 탐구 / 사례 비교·비평 + 자유 입력)
+⑥ [🧭 희망 전공·직무 방향] 세부 학과/희망 직무군 자유 직접 입력(미정 대비 넓은 트랙 칩 제공)
+⑦ [⚡ 보완하고 싶은 역량] (탐구의 깊이, 융합 사고력, 학업 역량, 실생활 적용력 + 자유 입력)
+⑧ [🚀 미래 기술·사회 트랙] (AI·빅데이터, ESG·친환경, 바이오·헬스, 콘텐츠 기획 + 자유 입력)
+2단계: 고등 전공 심화 &amp; 세특 탐구 리포트 — 사용자가 직접 입력한 구체 학과·세부 주제·수강 과목을 최우선 분석. 히어로(&quot;[별명]의 전공 심화 &amp; 세특 탐구 리포트 🧭&quot;, 학년/목표 계열, 작성일, 핵심 전공 역량 한 줄), 전공 적합성 &amp; 역량 맵(5지표: 학업 역량·탐구 깊이·전공 연계성·융합 사고력·실행/독서력, 인라인 SVG 육각형 레이더), 추천 세부 전공 &amp; 직무 트랙 4~5개(매치율순: 희망 학과+연계 세부 트랙/직무, 매치율% 진행바, 연계 이유, 권장 이수 과목+역량 태그 3개, 진학·졸업 후 경로 한 줄, 대표 전문가/학자 1명), 🌟[핵심] 교과 세특 &amp; 탐구 보고서 주제 아이디어 4가지(입력 주제·과목 조합 실전 주제, 예: &quot;확률과 통계 - [키워드] 데이터 분석 및 시각화&quot; + 탐구 가이드 + &#x27;AI를 탐구 도구로 활용하는 팁&#x27;), 고교 선택 과목 &amp; 학업 로드맵(추천 일반선택/진로선택 + 학년별 역량 단계), 핵심 세특 키워드 해시태그 5개, 롤모델 전문가 &amp; 세특 추천 도서/논문 3~4명·2~3권, 부모 코칭 가이드(탐구 과정의 자율성 지원 대화 팁 3), 하단 안내문 + [인쇄/PDF 저장] 버튼.
+[UI/기술] 각 질문에 [예시 칩] + [자유 입력] 결합, 딥블루+민트+화이트, 진입/hover/매치율 애니메이션, 단일 HTML, Tailwind·Noto Sans KR(CDN), localStorage 금지(JS State), 반응형, 실명/학교명 노출 방지.</pre><button class="copy" type="button">📋 프롬프트 복사</button><a class="dlbtn" style="display:block;margin-top:9px;background:#fff;border-color:var(--indigo);" href="https://share.gemini.google/E4OSAQNnRAuJ" target="_blank" rel="noopener">🚀 완성 앱 열기 →</a></div></div></details>
+  </section>
+
+<section id="s9" class="screen" data-screen="s9">
+    <h2 class="s">💬 도움이 되는 프롬프트</h2>
+    <p class="lead">카테고리를 눌러 펼치고 <b>📋 복사</b> → <b>제미나이</b> 등 AI에 붙여넣어 실행해 보세요.</p>
+<div class="sub" style="margin-top:6px;">🧪 프롬프트 한 단계 더 (고급 기법)</div>
+    <div class="acchint">AI를 조금 더 똑똑하게 부리는 3가지 방법이에요. 색깔이 다른 상자를 눌러 펼치고, 예시를 복사해 쓰면 돼요.</div>
+    <details class="acc tq1"><summary>🔄 리버스 프롬프팅 <span class="tqsub">· 원하는 결과 → 프롬프트 거꾸로 묻기</span></summary><div class="accbody">
+        <div class="pcard"><div class="ptitle">요즘 핫한 이미지 만들기</div><pre class="ptext">요즘 유행하는 '나를 닮은 캐릭터(피규어) 사진'처럼 만들고 싶어. 이런 결과물을 얻으려면 어떤 프롬프트를 써야 좋을지, 바로 쓸 수 있는 프롬프트로 만들어줘. (마음에 드는 예시 이미지가 있으면 여기 붙여넣을게: [이미지])</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+    </div></details>
+    <details class="acc tq2"><summary>🛠️ 메타 프롬프팅 <span class="tqsub">· 막연한 걸 인터뷰로 구체화</span></summary><div class="accbody">
+        <div class="pcard"><div class="ptitle">가족 여행 계획</div><div class="pdesc">💡 여행 가고 싶은데 어디로·뭘 할지 막연할 때</div><pre class="ptext">가족 여행을 가고 싶은데 어디로 갈지, 뭘 하고 싶은지 아직 막연해. 나를 인터뷰하듯 한 번에 하나씩 질문해줘. 함께 갈 사람·기간·예산·좋아하는 것·피하고 싶은 것 등을 차근차근 물어보고, 답을 다 들은 뒤에 어울리는 여행 방향 몇 가지로 정리해줘.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">나의 새 취미·배움</div><div class="pdesc">💡 뭔가 시작하고 싶은데 뭘 원하는지 모를 때 (엄마를 위한 선물)</div><pre class="ptext">새로 배우거나 취미를 시작하고 싶은데 뭘 하고 싶은지 아직 막연해. 나를 인터뷰하듯 한 번에 하나씩 질문해줘. 관심사·좋아하는 활동·쓸 수 있는 시간·예산·바라는 점 등을 차근차근 물어보고, 답을 다 들은 뒤에 나에게 어울리는 취미·배움 몇 가지로 정리해줘.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">특별한 날 이벤트</div><div class="pdesc">💡 아이 생일·기념일에 뭘 해줄지 막연할 때</div><pre class="ptext">[예-아이 생일]을 특별하게 챙겨주고 싶은데 뭘 할지 아직 막연해. 나를 인터뷰하듯 한 번에 하나씩 질문해줘. 아이가 좋아하는 것·인원·예산·장소·원하는 분위기 등을 물어보고, 답을 다 들은 뒤에 어울리는 이벤트 아이디어 몇 가지로 정리해줘.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+    </div></details>
+    <details class="acc tq3"><summary>🌳 생각의 나무 (TOT) <span class="tqsub">· 여러 입장 → 절충안</span></summary><div class="accbody">
+        <div class="pcard"><div class="ptitle">아이들 사이 갈등 (4입장)</div><div class="pdesc">💡 나·상대 학부모·교사·학교 입장을 두루 보고 싶을 때</div><pre class="ptext">[상황: 예-아이들 사이에 생긴 갈등]에 대해 여러 입장을 각각의 관점에서 설명해줘 — ① 나(우리 아이 부모) 입장 ② 상대 아이 부모 입장 ③ 교사 입장 ④ 학교 입장. 그다음 네 입장을 두루 고려한 현실적인 절충안을 제안해줘.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">부모·아이·전문가 (3입장)</div><div class="pdesc">💡 한 주제를 세 입장에서 보고 균형점을 찾을 때</div><pre class="ptext">[주제: 예-용돈 / 게임 시간 / 진로 등]에 대해 서로 다른 입장을 각각의 관점에서 설명해줘 — ① 부모 입장 ② 아이 입장 ③ 전문가 입장. 그다음 세 입장을 두루 고려한 현실적인 절충안을 제안해줘.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+    </div></details>
+<details class="acc"><summary>👨‍👩‍👧 자녀·교육 <span style="font-weight:700;font-size:12px;color:var(--muted);">10개</span></summary><div class="accbody"><div class="acchint">대화, 학습, 진로, 디지털 습관을 돕는 프롬프트</div>
+        <div class="pcard"><div class="ptitle">스마트폰 사용 대화</div><div class="pdesc">💡 스마트폰 때문에 자꾸 다투게 될 때</div><pre class="ptext">당신은 부모와 자녀의 관계를 해치지 않으면서 디지털 습관 형성을 돕는 상담 코치입니다.
+[초등학교 5학년] 자녀가 평일에도 스마트폰을 오래 보고, 그만 보라고 하면 화를 내서 대화가 자주 끊깁니다. 아이를 비난하거나 겁주는 방식은 제외하고, 오늘 저녁 부모가 실천할 수 있는 방법을 알려주세요.
+① 대화를 시작하는 말 3개
+② 아이와 함께 정할 규칙 3개
+③ 규칙을 지키지 못했을 때의 대응 2개를 쉬운 표현의 표로 정리해 주세요.
+마지막에는 부모가 피해야 할 말 2개도 적어 주세요.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">우리 집 디지털 사용규칙 만들기</div><div class="pdesc">💡 게임·영상 사용 규칙을 함께 정하고 싶을 때</div><pre class="ptext">[자녀 학교급과 나이] 자녀와 스마트폰·게임·영상 사용 규칙을 함께 정하려고 합니다. 평소 갈등이 생기는 상황은 [상황]입니다. 부모가 일방적으로 통제하는 규칙이 아니라 가족 모두가 지킬 수 있는 규칙 5개를 제안해 주세요. 각 규칙에 &#x27;왜 필요한지&#x27;, &#x27;지키기 어려울 때 대안&#x27;, &#x27;일주일 뒤 점검 질문&#x27;을 붙여 표로 정리해 주세요.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">감정코칭</div><div class="pdesc">💡 아이가 화내고 방문을 닫아버렸을 때</div><pre class="ptext">당신은 부모의 감정코칭 연습을 돕는 코치입니다. [자녀가 게임을 그만하라는 말에 문을 닫고 들어간 상황]에서 사용할 대화를 감정코칭 5단계인
+① 감정 알아차리기 ② 좋은 기회로 보기 ③ 공감하며 듣기 ④ 감정에 이름 붙이기 ⑤ 한계를 정하고 해결책 찾기
+순서로 작성해 주세요. 부모의 말은 짧고 자연스럽게, 훈계나 비꼬는 표현 없이 써 주세요.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">말투 바꾸기</div><div class="pdesc">💡 내 말(잔소리)을 부드럽게 바꾸고 싶을 때</div><pre class="ptext">아래 부모의 말을 자녀의 감정을 인정하면서도 필요한 한계를 분명히 전달하는 말로 바꿔 주세요.
+원래 말: &quot;[여기에 바꾸고 싶은 말을 입력]&quot;
+자녀의 상황: [학교급, 당시 상황]
+결과는 ① 바꾼 말 3가지 ② 각 표현이 효과적인 이유 ③ 피해야 할 말투로 정리해 주세요. 부모가 모든 요구를 들어주는 표현이 되지 않도록 해 주세요.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">실행을 돕는 대화</div><div class="pdesc">💡 숙제를 미루는 아이를 다그치지 않고 움직이게</div><pre class="ptext">[학교급] 자녀가 [숙제나 시험공부]를 시작하지 못하고 미루고 있습니다. 잔소리 대신 자녀가 스스로 계획을 말하도록 돕는 열린 질문 7개를 만들어 주세요. 질문은 한 문장씩 짧게 쓰고, &#x27;왜 아직 안 했어?&#x27;처럼 비난으로 들릴 수 있는 표현은 제외해 주세요. 마지막에 10분 안에 시작할 수 있는 가장 작은 행동도 3개 제안해 주세요.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">일주일 학습 계획</div><div class="pdesc">💡 일주일 공부 계획을 짜주고 싶을 때</div><pre class="ptext">[학교급] 자녀의 일주일 학습 계획을 세우려고 합니다. 학교·학원 일정은 [일정], 어려워하는 과목은 [과목], 집중 가능한 시간은 한 번에 [분]입니다. 수면과 휴식을 줄이지 않는 조건으로 월요일부터 일요일까지 계획을 표로 만들어 주세요. 매일 해야 할 일은 3개 이하로 제한하고, 못 지켰을 때 다시 시작하는 방법도 포함해 주세요.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">진로 대화</div><div class="pdesc">💡 아이 진로를 강요 없이 이야기하고 싶을 때</div><pre class="ptext">[학교급] 자녀가 [관심 분야 또는 고민]에 관심이 있습니다. 진로를 단정하거나 특정 직업을 강요하지 않으면서 관심을 탐색할 수 있는 대화 질문 10개를 만들어 주세요. 질문을 &#x27;좋아하는 것&#x27;, &#x27;잘하고 싶은 것&#x27;, &#x27;직접 해볼 경험&#x27;, &#x27;더 알아볼 정보&#x27;의 네 범주로 나누어 주세요. 관련 제도나 입시 정보는 최신 공식 자료로 재확인해야 한다고 표시해 주세요.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">AI 사용 결과 검토</div><div class="pdesc">💡 아이가 AI로 만든 결과물을 같이 점검할 때</div><pre class="ptext">자녀가 AI를 이용해 만든 아래 결과물을 부모와 함께 점검하려고 합니다. 결과물의 정답을 대신 작성하지 말고, 자녀가 스스로 확인하도록 돕는 질문을 만들어 주세요.
+① 사실 확인 질문 ② 출처 확인 질문 ③ 자녀의 생각이 들어갔는지 확인하는 질문 ④ 표현을 고치는 질문을 각각 3개씩 제시해 주세요.
+[AI로 만든 결과물 붙여넣기]</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">선생님과 소통 메시지</div><div class="pdesc">💡 담임 선생님께 정중히 문자를 보낼 때</div><pre class="ptext">아래 내용을 담임교사에게 보낼 정중하고 간결한 메시지로 다듬어 주세요. 사실관계는 바꾸지 말고, 요구하거나 따지는 느낌보다 상황을 설명하고 필요한 내용을 질문하는 방식으로 작성해 주세요. 제목 없이 5문장 이내로 써 주세요.
+[전달할 내용]</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">시험공부 계획</div><div class="pdesc">💡 시험을 앞두고 공부 계획이 필요할 때</div><pre class="ptext">당신은 중학생의 자기주도 학습을 돕는 학습 코치입니다. [중학교 2학년] 자녀가 [7일 뒤 수학 시험]을 앞두고 있습니다. 평일에는 [오후 6시부터 9시]까지 가능하고, 한 번에 [30분] 정도 집중할 수 있습니다. 수면 시간을 줄이지 않고, 어려워하는 [일차함수와 도형]을 우선하도록 7일 계획을 만들어 주세요. 매일 할 일은 3개 이하로 제한하고 ① 공부 시간 ② 구체적인 학습 내용 ③ 완료 확인 방법 ④ 못 했을 때의 대안을 표로 정리해 주세요. 부모가 점검할 때 사용할 잔소리 없는 질문도 하루에 하나씩 붙여 주세요.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div></div></details>
+      <details class="acc"><summary>🏠 가족·생활 <span style="font-weight:700;font-size:12px;color:var(--muted);">8개</span></summary><div class="accbody"><div class="acchint">식단, 장보기, 생활비와 가족 일상을 가볍게 정리하는 프롬프트</div>
+        <div class="pcard"><div class="ptitle">주말 가족 활동 계획</div><div class="pdesc">💡 주말 나들이 계획을 세울 때</div><pre class="ptext">당신은 가족 여가 계획을 돕는 생활 코디네이터입니다. [경기도 파주시]에서 출발하며 가족은 [성인 2명, 중학생 1명, 초등학생 1명]입니다. [토요일 오후 1시부터 6시]까지, 총비용 [8만 원 이하], 자가용 이동 [편도 40분 이내] 조건으로 실내 활동 2개와 야외 활동 2개를 제안해 주세요. 각 활동마다 예상 시간, 준비물, 비용 항목, 비가 올 때 대안을 표로 정리해 주세요. 실제 영업시간과 요금은 바뀔 수 있으니 확인해야 할 항목도 따로 표시해 주세요.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">메뉴 추천</div><div class="pdesc">💡 냉장고 재료로 오늘 메뉴가 고민될 때</div><pre class="ptext">당신은 바쁜 가정을 위한 집밥 계획 도우미입니다. 현재 있는 재료는 [달걀 4개, 두부 1모, 양파 2개, 당근 1개, 김치]이고, [성인 2명과 중학생 1명]이 먹습니다. 조리 시간은 [30분 이내], 추가 구매는 [1만 원 이하]로 제한해 주세요. 맵지 않은 주메뉴 1개와 곁들임 1개를 제안하고, ① 추가 장보기 목록 ② 조리 순서 ③ 남은 재료 보관법을 체크리스트로 정리해 주세요. 가족에게 알레르기가 있는 재료는 사용 전에 반드시 확인하라고 안내해 주세요.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">일주일 식단 및 장보기 목록</div><div class="pdesc">💡 일주일 저녁 식단·장보기를 한 번에</div><pre class="ptext">[가족 수와 연령]이 먹을 일주일 저녁 식단을 만들어 주세요. 보유 식재료는 [재료], 피해야 할 음식이나 알레르기는 [내용], 주당 식비는 [예산], 평일 조리 가능 시간은 [분]입니다. 재료가 겹치도록 식단을 구성하고, 요일별 메뉴·예상 조리 시간·전날 준비할 일·장보기 목록을 표로 정리해 주세요. 건강 관련 판단은 하지 말고 일반적인 균형만 고려해 주세요.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">남은 식재료 우선 사용 레시피</div><div class="pdesc">💡 유통기한 임박 재료를 처리하고 싶을 때</div><pre class="ptext">유통기한이 가까운 재료 [목록]과 기본 양념 [목록]이 있습니다. 추가 구매는 [금액] 이하, 조리 시간은 [분] 이내입니다. 재료를 최대한 남기지 않는 요리 3가지를 추천하고, 먼저 사용해야 할 재료 순서와 대체 가능한 재료를 알려 주세요. 식품 상태가 의심될 때는 먹지 말고 폐기 여부를 확인하도록 안내해 주세요.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">가족 집안일 분담표</div><div class="pdesc">💡 집안일을 공평하게 나누고 싶을 때</div><pre class="ptext">우리 가족 구성은 [구성원과 가능한 시간]입니다. 매일·매주 필요한 집안일은 [목록]입니다. 특정 사람에게 일이 몰리지 않도록 난이도와 소요 시간을 고려한 일주일 분담표를 만들어 주세요. 어린 자녀가 맡을 일은 안전하고 연령에 맞게 제안하고, 서로 바꾸고 싶을 때 사용할 대화 문장도 포함해 주세요.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">생활비 점검하기</div><div class="pdesc">💡 지출을 항목별로 점검하고 싶을 때</div><pre class="ptext">아래 지출 내역을 식비·교통·교육·주거·통신·여가·기타로 분류하고, 금액과 비율을 표로 정리해 주세요. 개인정보나 계좌번호는 제외한 내역만 사용합니다. 가장 큰 지출 항목 3개와 무리 없이 줄여볼 수 있는 선택지를 제안하되, 재정 결정을 대신하지 말고 점검 질문을 함께 주세요.
+[개인정보를 지운 지출 내역]</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">정중한 문의 및 요청 메시지 작성</div><div class="pdesc">💡 업체·기관·이웃에 정중히 문의할 때</div><pre class="ptext">[업체/기관/이웃]에게 [상황]에 관해 문의하려고 합니다. 감정적인 표현은 줄이고, 사실·불편 사항·확인을 원하는 내용·희망하는 해결 방법이 분명하게 드러나는 메시지를 작성해 주세요. 문자 메시지 분량으로 작성하고, 상대방이 답하기 쉬운 질문으로 끝내 주세요.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">한 달 생활비 줄이기 분석</div><div class="pdesc">💡 생활비를 차근차근 줄여보고 싶을 때</div><pre class="ptext">내가 한 달 생활비를 줄일 방법을 찾고 싶어. 바로 절약 방법을 제안하지 말고, 이 문제를 제대로 분석하려면 어떤 단계로 접근해야 하는지 먼저 설계해 줘. 어떤 정보를 확인해야 하는지, 어떤 순서로 분석해야 하는지, 어떤 기준으로 대안을 비교해야 하는지 정한 다음 그 절차에 따라 나와 대화를 진행해 줘. 한 번에 한 가지씩 질문하고, 확인되지 않은 지출이나 내 우선순위를 추측하지 마. 마지막에는 - 현재 지출에서 유지하고 싶은 것 - 부담스럽거나 아깝게 느끼는 것 - 줄일 가능성을 더 살펴볼 항목 - 결정을 위해 먼저 확인할 한 가지 를 정리해 줘. 내 대신 무엇을 줄일지 결정하지는 마.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div></div></details>
+      <details class="acc"><summary>🌿 나의 성장·일상 <span style="font-weight:700;font-size:12px;color:var(--muted);">10개</span></summary><div class="accbody"><div class="acchint">배움, 일정, 여행, 취미와 생각 정리에 활용하는 프롬프트</div>
+        <div class="pcard"><div class="ptitle">복잡한 내용 쉽게 이해하기</div><div class="pdesc">💡 어려운 개념을 쉽게 알고 싶을 때</div><pre class="ptext">[알고 싶은 개념]을 처음 배우는 사람에게 설명해 주세요. 어려운 용어는 일상적인 말로 바꾸고, 익숙한 비유 1개와 실제 사례 2개를 사용해 주세요. 설명 뒤에는 내가 이해했는지 확인할 수 있는 질문 3개를 내고, 정답은 내가 답한 뒤 알려 주세요.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">나만의 학습 계획</div><div class="pdesc">💡 새로 무언가를 배우기 시작할 때</div><pre class="ptext">나는 [배우고 싶은 주제]를 [기간] 동안 배우고 싶습니다. 현재 수준은 [수준], 하루에 사용할 수 있는 시간은 [분], 배우는 목적은 [목적]입니다. 주차별 목표와 매일 할 수 있는 20분 안팎의 활동을 구성해 주세요. 무료로 구할 수 있는 자료 유형도 제안하되, 실제 링크와 최신 정보는 다시 확인하라고 표시해 주세요.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">글·메시지 말투 바꾸기</div><div class="pdesc">💡 써 둔 글의 말투를 다듬고 싶을 때</div><pre class="ptext">아래 글의 사실과 의미는 그대로 유지하면서 [따뜻하고 정중한/간결하고 전문적인/친근한] 말투로 다듬어 주세요. 과장하거나 없던 내용을 추가하지 말고, 상대방이 해야 할 행동이 있다면 한눈에 보이게 써 주세요.
+[원문 붙여넣기]</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">선택지 비교 및 결정 돕기</div><div class="pdesc">💡 둘 중 무엇을 고를지 정할 때</div><pre class="ptext">[선택지 A]와 [선택지 B] 중에서 결정하려고 합니다. 내가 중요하게 생각하는 기준은 [비용, 시간, 편의성 등]이고 현재 상황은 [상황]입니다. 각 선택지의 장점·단점·확인해야 할 정보·되돌리기 어려운 위험을 표로 비교해 주세요. 결론을 대신 내리지 말고, 결정을 위해 내가 답해야 할 질문 5개를 제시해 주세요.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">현실적 일정 짜기</div><div class="pdesc">💡 할 일이 많아 하루가 벅찰 때</div><pre class="ptext">오늘 해야 할 일은 [목록]이고 사용할 수 있는 시간은 [시간대]입니다. 반드시 해야 하는 일은 [항목], 미뤄도 되는 일은 [항목]입니다. 이동·식사·휴식 시간을 포함해 현실적인 시간표를 만들어 주세요. 일정이 너무 많으면 무엇을 줄였는지와 그 이유도 알려 주세요.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">습관 시작하기</div><div class="pdesc">💡 새 습관을 꾸준히 만들고 싶을 때</div><pre class="ptext">나는 [만들고 싶은 습관]을 시작하고 싶지만 [방해 요인] 때문에 자주 중단합니다. 의지력에만 의존하지 않도록 5분 이내의 시작 행동, 기존 생활에 연결할 신호, 기록 방법, 실패한 다음 날 다시 시작하는 방법을 제안해 주세요. 첫 7일 계획을 체크리스트로 작성해 주세요.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">여행 일정 초안 만들기</div><div class="pdesc">💡 여행 계획 초안이 필요할 때</div><pre class="ptext">[출발지]에서 [여행지]로 [기간] 동안 여행합니다. 동행자는 [인원과 연령], 예산은 [금액], 좋아하는 것은 [관심사], 피하고 싶은 것은 [조건]입니다. 이동이 지나치게 많지 않은 일정 초안을 만들고, 예약 전 확인할 운영시간·휴무일·요금·교통 정보를 별도로 정리해 주세요. 최신 정보는 공식 사이트에서 재확인해야 한다고 표시해 주세요.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">냉철한 자기 점검</div><div class="pdesc">💡 고민을 객관적으로 정리하고 싶을 때</div><pre class="ptext">아래는 내가 요즘 고민하는 상황입니다. 내 편만 들거나 무조건 긍정하지 말고, ① 확인된 사실 ② 내가 해석한 부분 ③ 다른 관점에서 볼 가능성 ④ 내가 통제할 수 있는 작은 행동으로 나누어 정리해 주세요. 정신건강을 진단하거나 단정하지 마세요.
+[상황 설명]</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">취미 시작하기</div><div class="pdesc">💡 가볍게 취미를 시작하고 싶을 때</div><pre class="ptext">나는 [그림/글쓰기/사진/요리/정원 등] 취미를 [기간] 동안 가볍게 해보고 싶습니다. 현재 가진 도구는 [도구], 경험은 [수준], 주당 가능한 시간은 [시간]입니다. 결과물을 완벽하게 만드는 대신 매주 하나씩 완성하는 작은 프로젝트 4개를 난이도 순으로 제안해 주세요.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div>
+        <div class="pcard"><div class="ptitle">생활에서 바꾸고 싶은 것 찾기</div><div class="pdesc">💡 막연히 뭔가 바꾸고 싶을 때</div><pre class="ptext">나는 요즘 내 생활에서 뭔가를 바꾸고 싶다는 생각은 있는데, 정확히 무엇을 바꾸고 싶은지는 모르겠어. 해결책을 바로 제안하지 말고 나를 인터뷰해 줘. 최근 생활, 일, 관계, 시간 사용, 즐거움, 스트레스 등을 살펴볼 수 있도록 한 번에 한 가지씩 질문해 줘. 내 대답을 바탕으로 질문을 이어가고, 마지막에는 - 내가 현재 만족하는 것 - 내가 불편하게 느끼는 것 - 사실은 바꾸고 싶은 것 - 지금 가장 먼저 생각해 볼 한 가지 를 정리해 줘. 내 대신 결론을 내리지는 마.</pre><button class="copy" type="button">📋 프롬프트 복사</button></div></div></details>
+  </section>
+
+  <section class="screen" data-screen="gift">
+    <h2 class="s">🎁 선물</h2>
+    <p class="lead">오늘 연수에서 한 걸음 더, 집에서 자녀와 함께 쓰면 좋은 것들을 선물로 준비했어요. 카드를 <b>탭하면 뒤집혀서</b> 받는 방법이 나와요.</p>
+    <div class="gwrap">
+      <div class="gflip"><div class="gflip-in">
+        <div class="gfront gc1"><div class="gi">📓</div><div class="gt">노트북LM</div><div class="gs">내 자료를 요약·정리</div><div class="gflipnote">👆 눌러서 뒤집기</div></div>
+        <div class="gback"><div class="gbt">📓 노트북LM</div><div class="gbd">교과서·PDF·필기 등 내 자료를 올리면 요약·질문답변·오디오 정리까지 해줘요.</div><a class="btn indigo" href="https://notebooklm.google.com/" target="_blank" rel="noopener">🌐 사이트 열기</a><div class="dlrow"><a class="dlbtn" href="https://play.google.com/store/apps/details?id=com.google.android.apps.labs.language.tailwind" target="_blank" rel="noopener">🤖 안드로이드</a><a class="dlbtn" href="https://apps.apple.com/app/google-notebooklm/id6737527615" target="_blank" rel="noopener">🍎 아이폰</a></div></div>
+      </div></div>
+      <div class="gflip"><div class="gflip-in">
+        <div class="gfront gc2"><div class="gi">🧮</div><div class="gt">콴다 (QANDA)</div><div class="gs">사진 찍어 문제풀이</div><div class="gflipnote">👆 눌러서 뒤집기</div></div>
+        <div class="gback"><div class="gbt">🧮 콴다</div><div class="gbd">모르는 문제를 사진으로 찍으면 풀이를 찾아주는 학습 앱이에요.</div><div class="dlrow"><a class="dlbtn" href="https://play.google.com/store/apps/details?id=com.mathpresso.qanda" target="_blank" rel="noopener">🤖 안드로이드</a><a class="dlbtn" href="https://apps.apple.com/kr/app/id1270676408" target="_blank" rel="noopener">🍎 아이폰</a></div></div>
+      </div></div>
+      <div class="gflip"><div class="gflip-in">
+        <div class="gfront gc3"><div class="gi">📷</div><div class="gt">구글 렌즈</div><div class="gs">찍으면 검색·번역</div><div class="gflipnote">👆 눌러서 뒤집기</div></div>
+        <div class="gback"><div class="gbt">📷 구글 렌즈</div><div class="gbd">물건·식물·글자를 찍으면 정보를 찾아주고, 메뉴판·문서도 바로 번역해요.</div><div class="dlrow"><a class="dlbtn" href="https://play.google.com/store/apps/details?id=com.google.ar.lens" target="_blank" rel="noopener">🤖 안드로이드</a><a class="dlbtn" href="https://apps.apple.com/app/google/id284815942" target="_blank" rel="noopener">🍎 아이폰</a></div></div>
+      </div></div>
+      <div class="gflip"><div class="gflip-in">
+        <div class="gfront gc4"><div class="gi">🦁</div><div class="gt">브레이브</div><div class="gs">유튜브 광고 없이</div><div class="gflipnote">👆 눌러서 뒤집기</div></div>
+        <div class="gback"><div class="gbt">🦁 브레이브 브라우저</div><div class="gbd">광고를 막아주는 브라우저. 유튜브를 광고 없이 보고, 화면을 꺼도 소리가 계속 나와요.</div><div class="dlrow"><a class="dlbtn" href="https://play.google.com/store/apps/details?id=com.brave.browser" target="_blank" rel="noopener">🤖 안드로이드</a><a class="dlbtn" href="https://apps.apple.com/app/brave-browser-search-engine/id1052879175" target="_blank" rel="noopener">🍎 아이폰</a></div></div>
+      </div></div>
+      <div class="gflip"><div class="gflip-in">
+        <div class="gfront gc5"><div class="gi">🛡️</div><div class="gt">애드가드</div><div class="gs">노트북 광고차단</div><div class="gflipnote">👆 눌러서 뒤집기</div></div>
+        <div class="gback"><div class="gbt">🛡️ 애드가드 (크롬 확장)</div><div class="gbd">학생 노트북(크롬)에 설치하면 웹·영상 광고를 막아줘요. [Chrome에 추가]를 누르면 설치돼요.</div><a class="btn indigo" href="https://chromewebstore.google.com/detail/bgnkhhnnamicmpeenaelnjfhikgbkllg" target="_blank" rel="noopener">🧩 크롬에 설치</a></div>
+      </div></div>
+      <div class="gflip"><div class="gflip-in">
+        <div class="gfront gc7"><div class="gi">🍁</div><div class="gt">추석 인사카드</div><div class="gs">나를 닮은 캐릭터 카드</div><div class="gflipnote">👆 눌러서 뒤집기</div></div>
+        <div class="gback"><div class="gbt">🍁 추석 인사카드 만들기</div><div class="gbd">나를 닮은 캐릭터로 명절·인사 카드를 만들어주는 챗봇(GPTs)이에요. ChatGPT 로그인 후 쓸 수 있어요.</div><a class="btn indigo" href="https://chatgpt.com/g/g-6760928c812481919adc78834e43ef8d-nareul-dalmeun-kaerigteo-insakadeu-jejag-caesbos" target="_blank" rel="noopener">🎨 카드 만들러 가기</a></div>
+      </div></div>
+      <div class="gflip wide"><div class="gflip-in">
+        <div class="gfront gc6"><div class="gi">🎙️</div><div class="gt">실시간 통역 (제미나이 라이브)</div><div class="gs">여행·다문화 이웃과 대화 — 여러 나라 말로 바로 통역</div><div class="gflipnote">👆 눌러서 뒤집기</div></div>
+        <div class="gback"><div class="gbt">🎙️ 실시간 통역</div><div class="gbd">제미나이 앱에서 <b>라이브(Live)</b>를 켜고 아래 문장을 <b>그대로 말하면</b> 돼요. 복사할 필요 없어요.</div><div class="gline"><b>✍️ 기본:</b> 구글 라이브 기능을 켜고, <span style="color:var(--red);font-weight:800;font-size:15px;">내가 한국어로 말하면 [원하는 언어]로 말해주고, [원하는 언어]로 말하면 한국어로 말해줘.</span><br>🇺🇸 영어 · 🇻🇳 베트남어 · 🇨🇳 중국어 · 🇯🇵 일본어 · 🇹🇭 태국어 · 🇷🇺 러시아어 — [원하는 언어] 자리에 넣어 말해보세요.</div></div>
+      </div></div>
+    </div>
+  </section>
+
+  <section class="screen" data-screen="notice">
+    <h2 class="s">📢 공유</h2>
+    <p class="lead">강사가 나누는 안내·링크·프롬프트가 실시간으로 여기에 떠요. (강사만 올릴 수 있어요)</p>
+    <div id="noticeFeed" class="nfeed"><div class="empty">아직 공유된 내용이 없어요.</div></div>
+    <div id="noticePost" class="npost" hidden>
+      <textarea id="noticeInput" placeholder="학부모님께 보낼 내용·링크·프롬프트를 적으세요"></textarea>
+      <button class="btn indigo" id="noticeSend">📢 올리기</button>
+    </div>
+  </section>
+
+  <footer>
+    <div class="foot-co">FlowDX · AI 교육·연수</div>
+    <div>Google 공식 PD 파트너사 · 대표 이애진</div>
+    <div>문의 <a href="mailto:ai@flowdx.kr">ai@flowdx.kr</a> · <a href="https://flowdx.kr" target="_blank" rel="noopener">flowdx.kr</a></div>
+    <a class="kakaobtn" href="https://open.kakao.com/o/sM6RgUxi" target="_blank" rel="noopener">💬 카카오톡 오픈채팅 문의</a>
+    <div style="margin-top:14px;">© 2026 파주 AI-ROAD 학부모 연수</div>
+  </footer>
+</div>
+</div><!-- #page -->
+
+<button id="phoneToggle">📱 발표용 폰 화면</button>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+/* ===== 설정 ===== */
+const SB_URL = "https://bklnkahbuglnrxpohgmm.supabase.co";
+const SB_ANON_KEY = "sb_publishable_iNyZyK0aRV0AeaFe6u2RFw_D2IiE-QP";
+const TEACHER_PIN = "2026";
+
+let sb=null;
+try{ if(SB_URL && SB_ANON_KEY && window.supabase){ sb=window.supabase.createClient(SB_URL,SB_ANON_KEY); } }catch(e){}
+
+/* ===== 학교급 토글 ===== */
+(function(){
+  const bar=document.getElementById('levelbar'); if(!bar) return;
+  const btns=[...bar.querySelectorAll('button')];
+  const blocks=[...document.querySelectorAll('.lv')];
+  function set(lv){
+    btns.forEach(b=>b.classList.toggle('on', b.getAttribute('data-lv')===lv));
+    blocks.forEach(b=>b.classList.toggle('show', b.getAttribute('data-lv')===lv));
+    try{ localStorage.setItem('paju-parent-lv',lv); }catch(e){}
+  }
+  btns.forEach(b=>b.addEventListener('click',()=>set(b.getAttribute('data-lv'))));
+  let init='cho'; try{ init=localStorage.getItem('paju-parent-lv')||'cho'; }catch(e){}
+  set(init);
+})();
+
+/* ===== 포스트잇 (공유 저장, 대시보드 없음) ===== */
+const NOTE_COLORS=['#fff3b0','#c8f7c5','#ffd6e0','#cfe8ff','#e5d4ff','#ffe0b3'];
+const EX={ p_worry:['게임·영상을 너무 오래 봐요','가짜 정보를 그대로 믿을까 걱정','AI한테만 의존할까 봐요'] };
+const REFRESH=[];
+document.querySelectorAll('[data-board]').forEach(board=>{
+  const id=board.getAttribute('data-board');
+  board.innerHTML='<div class="pi-input"><input type="text" maxlength="120" placeholder="여기에 적고 붙이기"><button>붙이기</button></div><div class="notes"></div>';
+  const input=board.querySelector('input'), addBtn=board.querySelector('button'), notes=board.querySelector('.notes');
+  let remove=()=>{};
+  function draw(list){
+    notes.innerHTML='';
+    if(!list.length){ (EX[id]||[]).forEach((t,i)=>{ const n=document.createElement('div'); n.className='note ex'; n.style.background=NOTE_COLORS[i%NOTE_COLORS.length];
+      n.innerHTML='<span class="exb">예시</span>'; n.appendChild(document.createTextNode(t)); notes.appendChild(n); }); return; }
+    list.forEach((row,i)=>{ const n=document.createElement('div'); n.className='note'; n.style.background=NOTE_COLORS[i%NOTE_COLORS.length];
+      n.appendChild(document.createTextNode(row.text||row));
+      if(row.id!==undefined){ const d=document.createElement('button'); d.textContent='✕'; d.title='삭제';
+        d.style.cssText='position:absolute;top:4px;right:5px;border:none;background:transparent;color:#00000055;font-weight:800;cursor:pointer;';
+        d.onclick=()=>remove(row); n.appendChild(d); }
+      notes.appendChild(n); });
+  }
+  if(sb){
+    async function load(){ const {data,error}=await sb.from('comments').select('*').eq('board',id).order('created_at',{ascending:true}); if(!error) draw(data||[]); }
+    remove=async(row)=>{ await sb.from('comments').delete().eq('id',row.id); load(); };
+    async function add(){ const v=input.value.trim(); if(!v)return; input.value=''; await sb.from('comments').insert({board:id,text:v}); load(); }
+    addBtn.onclick=add; input.addEventListener('keydown',e=>{ if(e.key==='Enter') add(); });
+    REFRESH.push(load); load();
+    try{ sb.channel('rt-'+id).on('postgres_changes',{event:'*',schema:'public',table:'comments',filter:'board=eq.'+id},load).subscribe(); }catch(e){}
+  } else {
+    const K='paju-parent-'+id;
+    const rd=()=>{try{return JSON.parse(localStorage.getItem(K))||[];}catch(e){return[];}};
+    const sv=(d)=>{try{localStorage.setItem(K,JSON.stringify(d));}catch(e){}};
+    function render(){ draw(rd().map((t,i)=>({text:t,_i:i}))); }
+    remove=(row)=>{ const d=rd(); d.splice(row._i,1); sv(d); render(); };
+    function add(){ const v=input.value.trim(); if(!v)return; const d=rd(); d.push(v); sv(d); input.value=''; render(); }
+    addBtn.onclick=add; input.addEventListener('keydown',e=>{ if(e.key==='Enter') add(); });
+    REFRESH.push(render); render();
+  }
+});
+
+/* ===== 화면 전환 (탭형) ===== */
+(function(){
+  const screens=[...document.querySelectorAll('.screen')];
+  const navlinks=[...document.querySelectorAll('.nav a')];
+  function show(key){
+    let found=false;
+    screens.forEach(s=>{ const on=s.getAttribute('data-screen')===key; s.classList.toggle('active',on); if(on) found=true; });
+    if(!found){ key='home'; screens.forEach(s=>s.classList.toggle('active',s.getAttribute('data-screen')==='home')); }
+    navlinks.forEach(a=>{ const on=a.getAttribute('data-screen')===key; a.classList.toggle('active',on); if(on) a.scrollIntoView({block:'nearest',inline:'center'}); });
+    document.querySelectorAll('#topbar .tab').forEach(function(t){ var on=t.getAttribute('data-goto')===key; t.classList.toggle('active',on); if(on) t.scrollIntoView({block:'nearest',inline:'center'}); });
+    window.scrollTo(0,0);
+  }
+  document.addEventListener('click',function(e){
+    const el=e.target.closest('[data-goto]'); if(!el) return;
+    e.preventDefault(); show(el.getAttribute('data-goto'));
+  });
+  window.__showScreen=show;
+  show('home');
+})();
+
+/* ===== 발표용 폰 화면 토글 ===== */
+(function(){
+  const btn=document.getElementById('phoneToggle');
+  if(!btn) return;
+  btn.addEventListener('click',()=>{
+    const on=document.body.classList.toggle('phone');
+    btn.textContent = on ? '🖥 넓게 보기' : '📱 발표용 폰 화면';
+    window.scrollTo(0,0);
+  });
+})();
+
+
+/* ===== 뒤집는 통계 카드 ===== */
+document.querySelectorAll('.flip').forEach(function(f){
+  f.addEventListener('click',function(){ f.classList.toggle('flipped'); });
+});
+/* 선물 뒤집기 카드 */
+document.addEventListener('click',function(e){
+  if(e.target.closest('.gflip a')) return;
+  var g=e.target.closest('.gflip'); if(g) g.classList.toggle('flipped');
+});
+
+/* ===== 프롬프트 복사 ===== */
+document.addEventListener('click',function(e){
+  var b=e.target.closest('.copy'); if(!b) return;
+  var card=b.closest('.pcard'); var pre=card&&card.querySelector('.ptext'); if(!pre) return;
+  var text=pre.textContent;
+  function done(){ var o=b.getAttribute('data-o')||'📋 프롬프트 복사'; b.setAttribute('data-o',o); b.classList.add('done'); b.textContent='✓ 복사됐어요! 제미나이에 붙여넣으세요'; setTimeout(function(){b.textContent=o;b.classList.remove('done');},1600); }
+  function fallback(t){ try{ var ta=document.createElement('textarea'); ta.value=t; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.focus(); ta.select(); document.execCommand('copy'); ta.remove(); done(); }catch(err){ alert('자동 복사가 안 됐어요. 프롬프트 글상자를 길게 눌러 복사해 주세요.'); } }
+  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done).catch(function(){fallback(text);}); }
+  else { fallback(text); }
+});
+
+/* ===== 공지 · 공유 피드 ===== */
+(function(){
+  const feed=document.getElementById('noticeFeed'); if(!feed) return;
+  const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  function linkify(t){ return esc(t).replace(/(https?:\/\/[^\s]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>').replace(/\n/g,'<br>'); }
+  const STORE={};
+  function draw(list){
+    if(!list.length){ feed.innerHTML='<div class="empty">아직 공유된 내용이 없어요.</div>'; return; }
+    feed.innerHTML='';
+    list.forEach(function(r){
+      const raw=r.text||''; const id='n'+(r.id!==undefined?r.id:Math.random()); STORE[id]=raw;
+      const tm=(r.created_at||'').replace('T',' ').slice(5,16);
+      const d=document.createElement('div'); d.className='nmsg';
+      d.innerHTML=linkify(raw)+'<button class="ncopy" data-ncopy="'+id+'">📋 복사</button><div class="nt">'+esc(tm)+'</div>';
+      feed.appendChild(d);
+    });
+    feed.scrollTop=feed.scrollHeight;
+  }
+  if(sb){
+    async function load(){ const q=await sb.from('comments').select('*').eq('board','notice').order('created_at',{ascending:true}); if(!q.error) draw(q.data||[]); }
+    window.__noticeSend=async function(t){ await sb.from('comments').insert({board:'notice',text:t}); load(); };
+    window.__noticeReload=load;
+    load();
+    try{ sb.channel('rt-notice').on('postgres_changes',{event:'*',schema:'public',table:'comments',filter:'board=eq.notice'},load).subscribe(); }catch(e){}
+  } else {
+    const K='paju-parent-notice';
+    const rd=()=>{try{return JSON.parse(localStorage.getItem(K))||[];}catch(e){return[];}};
+    function load(){ draw(rd().map((t,i)=>({text:t,id:i}))); }
+    window.__noticeSend=function(t){ const a=rd(); a.push(t); try{localStorage.setItem(K,JSON.stringify(a));}catch(e){} load(); };
+    window.__noticeReload=load;
+    load();
+  }
+  const sendBtn=document.getElementById('noticeSend'), inp=document.getElementById('noticeInput');
+  if(sendBtn) sendBtn.onclick=function(){ const v=(inp.value||'').trim(); if(!v)return; window.__noticeSend(v); inp.value=''; };
+  feed.addEventListener('click',function(e){ const b=e.target.closest('[data-ncopy]'); if(!b)return; const t=STORE[b.getAttribute('data-ncopy')]||'';
+    function done(){ const o=b.textContent; b.textContent='✓ 복사됨'; setTimeout(function(){b.textContent=o;},1300); }
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(done).catch(function(){}); }
+    else { try{ const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); done(); }catch(x){} }
+  });
+})();
+
+/* ===== 교사 설정 (비번 2026 → 포스트잇 비우기) ===== */
+(function(){
+  const box=document.getElementById('teacherBox'), trig=document.getElementById('teacherTrigger');
+  const pin=document.getElementById('tpin'), unlock=document.getElementById('tunlock'), panel=document.getElementById('tpanel');
+  if(trig) trig.addEventListener('click',e=>{ e.preventDefault();
+    box.classList.toggle('on'); if(box.classList.contains('on')){ box.scrollIntoView({behavior:'smooth',block:'center'}); pin.focus(); } });
+  function go(){ if((pin.value||'').trim()===TEACHER_PIN){ panel.hidden=false; var np=document.getElementById('noticePost'); if(np) np.hidden=false; } else { alert('비밀번호가 올바르지 않습니다.'); pin.value=''; pin.focus(); } }
+  if(unlock) unlock.onclick=go;
+  if(pin) pin.addEventListener('keydown',e=>{ if(e.key==='Enter') go(); });
+  const rst=document.getElementById('tReset');
+  if(rst) rst.onclick=async()=>{
+    if(!confirm('학부모 의견 포스트잇을 모두 지울까요?')) return;
+    if(sb){ const {error}=await sb.from('comments').delete().eq('board','p_worry'); if(error){ alert('실패: '+error.message); return; } }
+    else { try{ localStorage.removeItem('paju-parent-p_worry'); }catch(e){} }
+    REFRESH.forEach(fn=>{try{fn();}catch(e){}});
+    alert('🧹 포스트잇을 비웠어요.');
+  };
+  const nrst=document.getElementById('tNoticeReset');
+  if(nrst) nrst.onclick=async()=>{
+    if(!confirm('공유한 내용을 모두 지울까요?')) return;
+    if(sb){ const {error}=await sb.from('comments').delete().eq('board','notice'); if(error){ alert('실패: '+error.message); return; } }
+    else { try{ localStorage.removeItem('paju-parent-notice'); }catch(e){} }
+    try{ if(window.__noticeReload) window.__noticeReload(); }catch(e){}
+    alert('📢 공유 내용을 비웠어요.');
+  };
+})();
+</script>
